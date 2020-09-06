@@ -1,43 +1,33 @@
 TRAIN:
+    # Number of training epochs
+    epochs: 180 # original 90
     
     # Architecture name, see pytorch models package for
     # a list of possible architectures
-    arch: 'resnet50'
+    arch: 'wide-resnet'
 
+    # Starting epoch
+    start_epoch: 0
 
     # SGD paramters
     lr: 0.1
     momentum: 0.9
-    weight_decay: 0.0001
+    weight_decay: 0.0002
 
     # Print frequency, is used for both training and testing
     print_freq: 10
 
     # Dataset mean and std used for data normalization
-    mean: !!python/tuple [0.485, 0.456, 0.406]
-    std: !!python/tuple [0.229, 0.224, 0.225]
-
-    # FAST ADVERSARIAL TRAINING PARAMETER
-
-    # Starting epoch (interpret as multiplied by n_repeats)
-    start_epoch: 0
-
-    # Number of training epochs
-    epochs: 6
-
-    lr_epochs: !!python/tuple [0,1,6]
-    lr_values: !!python/tuple [0,0.4,0.04]
-
-    half: true
-    random_init: true
+    mean: !!python/tuple [0.4914, 0.4822, 0.4465]
+    std: !!python/tuple [0.2471, 0.2435, 0.2616]
     
 ADV:
     # FGSM parameters during training
-    clip_eps: 2.0
-    fgsm_step: 2.5
+    clip_eps: 8.0
+    fgsm_step: 2.0
 
     # Number of repeats for free adversarial training
-    n_repeats: 1
+    n_repeats: 8
 
     # PGD attack parameters used during validation
     # the same clip_eps as above is used for PGD
@@ -47,21 +37,18 @@ ADV:
     
 DATA:
     # Number of data workers
-    workers: 16
+    workers: 4
+
+    # Training batch size
+    batch_size: 256
+
+    # Image Size
+    img_size: 256
+
+    # Crop Size for data augmentation
+    crop_size: 32
 
     # Color value range
     max_color_value: 255.0
-
-    # FAST ADVERSARIAL TRAINING PARAMETER
-
-    # Image Size
-    # img_size: 160
-    img_size: 0
-
-    # Training batch size
-    batch_size: 512
-
-    # Crop Size for data augmentation
-    crop_size: 128
 
     

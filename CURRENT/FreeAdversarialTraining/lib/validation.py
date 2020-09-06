@@ -4,6 +4,44 @@ import sys
 import numpy as np
 import time
 from torch.autograd import Variable
+from torchvision import datasets, transforms
+
+cifar10_mean = (0.4914, 0.4822, 0.4465)
+cifar10_std = (0.2471, 0.2435, 0.2616)
+
+def get_loaders(dir_, batch_size, num_workers, crop_size):
+    
+    train_transform = transforms.Compose([
+        transforms.RandomCrop(crop_size, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(cifar10_mean, cifar10_std),
+    ])
+    test_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(cifar10_mean, cifar10_std),
+    ])
+
+    train_dataset = datasets.CIFAR10(
+        dir_, train=True, transform=train_transform, download=True)
+    test_dataset = datasets.CIFAR10(
+        dir_, train=False, transform=test_transform, download=True)
+
+    train_loader = torch.utils.data.DataLoader(
+        dataset=train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        pin_memory=True,
+        num_workers=num_workers,
+    )
+    test_loader = torch.utils.data.DataLoader(
+        dataset=test_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        pin_memory=True,
+        num_workers=num_workers,
+    )
+    return train_loader, test_loader
 
 def validate_pgd(val_loader, model, criterion, K, step, configs, logger):
     # Mean/Std for normalization   
@@ -61,7 +99,7 @@ def validate_pgd(val_loader, model, criterion, K, step, configs, logger):
             end = time.time()
 
             if i % configs.TRAIN.print_freq == 0:
-                print('PGD Test: [{0}/{1}]\t'
+                logger.info('PGD Test: [{0}/{1}]\t'
                       'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                       'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                       'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
@@ -70,7 +108,7 @@ def validate_pgd(val_loader, model, criterion, K, step, configs, logger):
                        top1=top1, top5=top5))
                 sys.stdout.flush()
 
-    print(' PGD Final Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
+    logger.info('PGD Final Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
         .format(top1=top1, top5=top5))
 
     return top1.avg
@@ -112,7 +150,7 @@ def validate(val_loader, model, criterion, configs, logger):
             end = time.time()
 
             if i % configs.TRAIN.print_freq == 0:
-                print('Test: [{0}/{1}]\t'
+                logger.info('Test: [{0}/{1}]\t'
                       'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                       'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                       'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
@@ -121,6 +159,6 @@ def validate(val_loader, model, criterion, configs, logger):
                        top1=top1, top5=top5))
                 sys.stdout.flush()
 
-    print(' Final Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
+    logger.info('Test Final Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
             .format(top1=top1, top5=top5))
     return top1.avg

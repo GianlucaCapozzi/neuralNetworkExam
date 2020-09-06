@@ -14,14 +14,14 @@ from torch.autograd import Variable
 import math
 import numpy as np
 from utils import *
-from validation import validate, validate_pgd
+from validation import validate, validate_pgd, get_loaders
 import torchvision.models as models
 
+# IMPORT WIDE-RESNET
+from wideresnet import *
 
 def parse_args():
     parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-    parser.add_argument('data', metavar='DIR',
-                    help='path to dataset')
     parser.add_argument('--output_prefix', default='free_adv', type=str,
                     help='prefix used to define output path')
     parser.add_argument('-c', '--config', default='configs.yml', type=str, metavar='Path',
@@ -37,9 +37,14 @@ def parse_args():
 
 # Parase config file and initiate logging
 configs = parse_config_file(parse_args())
-logger = initiate_logger(configs.output_name)
+
+logger = initiate_logger(configs.output_name + "_" + configs.TRAIN.arch)
 print = logger.info
 cudnn.benchmark = True
+
+# Check if there is cuda
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print(f"Running on {device}")
 
 def main():
     # Scale and initialize the parameters
@@ -61,10 +66,10 @@ def main():
     # Create the model
     if configs.pretrained:
         print("=> using pre-trained model '{}'".format(configs.TRAIN.arch))
-        model = models.__dict__[configs.TRAIN.arch](pretrained=True)
+        model = WideResNet().to(device)
     else:
         print("=> creating model '{}'".format(configs.TRAIN.arch))
-        model = models.__dict__[configs.TRAIN.arch]()
+        model = WideResNet().to(device)
 
     # Wrap the model into DataParallel
     model = torch.nn.DataParallel(model).cuda()
@@ -93,31 +98,7 @@ def main():
 
             
     # Initiate data loaders
-    traindir = os.path.join(configs.data, 'train')
-    valdir = os.path.join(configs.data, 'val')
-    
-    train_dataset = datasets.ImageFolder(
-        traindir,
-        transforms.Compose([
-            transforms.RandomResizedCrop(configs.DATA.crop_size),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-        ]))
-
-    train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=configs.DATA.batch_size, shuffle=True,
-        num_workers=configs.DATA.workers, pin_memory=True, sampler=None)
-    
-    normalize = transforms.Normalize(mean=configs.TRAIN.mean,
-                                    std=configs.TRAIN.std)
-    val_loader = torch.utils.data.DataLoader(
-        datasets.ImageFolder(valdir, transforms.Compose([
-            transforms.Resize(configs.DATA.img_size),
-            transforms.CenterCrop(configs.DATA.crop_size),
-            transforms.ToTensor(),
-        ])),
-        batch_size=configs.DATA.batch_size, shuffle=False,
-        num_workers=configs.DATA.workers, pin_memory=True)
+    train_loader, test_loader = get_loaders(".././data", configs.DATA.batch_size, configs.DATA.workers, configs.DATA.crop_size)
 
     # If in evaluate mode: perform validation on PGD attacks as well as clean samples
     if configs.evaluate:
@@ -135,7 +116,7 @@ def main():
         train(train_loader, model, criterion, optimizer, epoch)
 
         # evaluate on validation set
-        prec1 = validate(val_loader, model, criterion, configs, logger)
+        prec1 = validate(test_loader, model, criterion, configs, logger)
 
         # remember best prec@1 and save checkpoint
         is_best = prec1 > best_prec1
@@ -151,7 +132,7 @@ def main():
     # Automatically perform PGD Attacks at the end of training
     logger.info(pad_str(' Performing PGD Attacks '))
     for pgd_param in configs.ADV.pgd_attack:
-        validate_pgd(val_loader, model, criterion, pgd_param[0], pgd_param[1], configs, logger)
+        validate_pgd(test_loader, model, criterion, pgd_param[0], pgd_param[1], configs, logger)
 
         
 # Free Adversarial Training Module        
@@ -221,13 +202,12 @@ def train(train_loader, model, criterion, optimizer, epoch):
                        epoch, i, len(train_loader), batch_time=batch_time,
                        data_time=data_time, top1=top1, top5=top5,cls_loss=losses))
                 sys.stdout.flush()
-        train_loss += loss.item() * X.shape[0]
-        train_acc += (output.max(1)[1] == y).sum().item()
-        train_err += (output.max(1)[1] != y).sum().item()
-        train_n += y.size(0)
-        scheduler.step()
+        train_loss += loss.item() * input.shape[0]
+        train_acc += (output.max(1)[1] == target).sum().item()
+        train_err += (output.max(1)[1] != target).sum().item()
+        train_n += target.size(0)
     # Epoch accuracy
-    print("Accuracy: %.3f, Error: %.3f, Loss: %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
+    print("Train Accuracy: %.3f, Error: %.3f, Loss: %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
         
 
 if __name__ == '__main__':

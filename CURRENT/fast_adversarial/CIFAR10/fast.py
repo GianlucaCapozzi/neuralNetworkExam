@@ -14,13 +14,16 @@ from preact_resnet import PreActResNet18
 from utils import (upper_limit, lower_limit, std, clamp, get_loaders,
     attack_pgd, evaluate_pgd, evaluate_standard)
 
+# IMPORT WIDE-RESNET
+from wideresnet import *
+
 logger = logging.getLogger(__name__)
 
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch-size', default=128, type=int)
-    parser.add_argument('--data-dir', default='../../cifar-data', type=str)
+    parser.add_argument('--data-dir', default='../../data', type=str)
     parser.add_argument('--epochs', default=15, type=int)
     parser.add_argument('--lr-schedule', default='cyclic', choices=['cyclic', 'multistep'])
     parser.add_argument('--lr-min', default=0., type=float)
@@ -31,7 +34,7 @@ def get_args():
     parser.add_argument('--alpha', default=10, type=float, help='Step size')
     parser.add_argument('--delta-init', default='random', choices=['zero', 'random', 'previous'],
         help='Perturbation initialization method')
-    parser.add_argument('--out-dir', default='train_fgsm_output', type=str, help='Output directory')
+    parser.add_argument('--out-dir', default='train_fast_output', type=str, help='Output directory')
     parser.add_argument('--seed', default=0, type=int, help='Random seed')
     parser.add_argument('--early-stop', action='store_true', help='Early stop if overfitting occurs')
     parser.add_argument('--opt-level', default='O2', type=str, choices=['O0', 'O1', 'O2'],
@@ -42,15 +45,29 @@ def get_args():
         help='Maintain FP32 master weights to accompany any FP16 model weights, not applicable for O1 opt level')
     return parser.parse_args()
 
+def initiate_logger(output_path):
+    if not os.path.exists(os.path.join('output', output_path)):
+        os.mkdir(os.path.join('output', output_path))
+
+    logger.addHandler(logging.FileHandler(os.path.join('output', output_path, 'log.txt'),'w'))
+    logger.info(pad_str(' LOGISTICS '))
+    logger.info('Experiment Date: {}'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M')))
+    logger.info('Output Name: {}'.format(output_path))
+    logger.info('User: {}'.format(os.getenv('USER')))
+
+    return logger
+
+args = get_args()
+logger = initiate_logger(args.out_dir)
+
+print = logger.info
+
+# Check if there is cuda
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print(f"Running on {device}")
+
 
 def main():
-    args = get_args()
-
-    if not os.path.exists(args.out_dir):
-        os.mkdir(args.out_dir)
-    logfile = os.path.join(args.out_dir, 'output.log')
-    if os.path.exists(logfile):
-        os.remove(logfile)
 
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -62,7 +79,7 @@ def main():
     alpha = (args.alpha / 255.) / std
     pgd_alpha = (2 / 255.) / std
 
-    model = PreActResNet18().cuda()
+    model = WideResNet().to(device)
     model.train()
 
     opt = torch.optim.SGD(model.parameters(), lr=args.lr_max, momentum=args.momentum, weight_decay=args.weight_decay)
@@ -73,7 +90,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     if args.delta_init == 'previous':
-        delta = torch.zeros(args.batch_size, 3, 32, 32).cuda()
+        delta = torch.zeros(args.batch_size, 3, 32, 32).to(device)
 
     lr_steps = args.epochs * len(train_loader)
     if args.lr_schedule == 'cyclic':
@@ -90,7 +107,7 @@ def main():
         train(train_loader, model, criterion, epoch, epsilon, opt, alpha, scheduler)
 
     # Evaluation
-    model_test = PreActResNet18().cuda()
+    model_test = WideResNet().to(device)
     model_test.load_state_dict(best_state_dict)
     model_test.float()
     model_test.eval()
@@ -99,8 +116,8 @@ def main():
     pgd_loss, pgd_acc = evaluate_pgd(test_loader, model_test, 50, 10)
     test_loss, test_acc = evaluate_standard(test_loader, model_test)
 
-    logger.info('Test Loss \t Test Acc \t PGD Loss \t PGD Acc')
-    logger.info('%.4f \t \t %.4f \t %.4f \t %.4f', test_loss, test_acc, pgd_loss, pgd_acc)
+    print('Test Loss \t Test Acc \t PGD Loss \t PGD Acc')
+    print('%.4f \t \t %.4f \t %.4f \t %.4f', test_loss, test_acc, pgd_loss, pgd_acc)
 
 def train(train_loader, model, criterion, epoch, epsilon, opt, alpha, scheduler):
     start_epoch_time = time.time()
@@ -160,7 +177,7 @@ def train(train_loader, model, criterion, epoch, epsilon, opt, alpha, scheduler)
         train_n += y.size(0)
         scheduler.step()
 
-    print("Accuracy: %.3f, Error: %.3f, Loss: %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
+    print("Train Accuracy: %.3f, Error: %.3f, Loss: %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
 
 if __name__ == "__main__":
     main()
