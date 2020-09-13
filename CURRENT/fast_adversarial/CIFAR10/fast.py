@@ -103,6 +103,11 @@ def main():
     prev_robust_acc = 0.
     start_train_time = time.time()
 
+
+    # /************************
+    #  * #  * # EPOCHS LOOP * *
+    #  *                      *
+    #  ************************/
     for epoch in range(args.epochs):
         train(train_loader, model, criterion, epoch, epsilon, opt, alpha, scheduler)
 
@@ -137,6 +142,7 @@ def train(train_loader, model, criterion, epoch, epsilon, opt, alpha, scheduler)
         delta.requires_grad = True
         output = model(X + delta[:X.size(0)])
         loss = F.cross_entropy(output, y)
+        opt.zero_grad()
         with amp.scale_loss(loss, opt) as scaled_loss:
             scaled_loss.backward()
         grad = delta.grad.detach()

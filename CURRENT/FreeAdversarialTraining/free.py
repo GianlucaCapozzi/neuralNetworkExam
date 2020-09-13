@@ -117,7 +117,7 @@ def main():
 
         # evaluate on validation set
         prec1 = validate(test_loader, model, criterion, configs, logger)
-
+        cifarTest(epoch,model,criterion,test_loader,logger)
         # remember best prec@1 and save checkpoint
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
@@ -191,6 +191,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
             # measure elapsed time
             batch_time.update(time.time() - end)
             end = time.time()
+
 
             if i % configs.TRAIN.print_freq == 0:
                 print('Train Epoch: [{0}][{1}/{2}]\t'

@@ -7,7 +7,7 @@ from torch.autograd import Variable
 from torchvision import datasets, transforms
 
 cifar10_mean = (0.4914, 0.4822, 0.4465)
-cifar10_std = (0.2471, 0.2435, 0.2616)
+cifar10_std = (0.2023, 0.1994, 0.2010)
 
 def get_loaders(dir_, batch_size, num_workers, crop_size):
     
@@ -150,12 +150,12 @@ def validate(val_loader, model, criterion, configs, logger):
             end = time.time()
 
             if i % configs.TRAIN.print_freq == 0:
-                logger.info('Test: [{0}/{1}]\t'
+                logger.info('Test: ['+ str(i/len(val_loader.dataset) )+']\t'
                       'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                       'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                       'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
                       'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                       i, len(val_loader), batch_time=batch_time, loss=losses,
+                        batch_time=batch_time, loss=losses,
                        top1=top1, top5=top5))
                 sys.stdout.flush()
 
