@@ -4,6 +4,9 @@ import torch.nn.functional as F
 from torchvision import datasets, transforms
 from torch.utils.data.sampler import SubsetRandomSampler
 import numpy as np
+import os
+import logging
+import datetime
 
 cifar10_mean = (0.4914, 0.4822, 0.4465)
 cifar10_std = (0.2471, 0.2435, 0.2616)
@@ -14,9 +17,58 @@ std = torch.tensor(cifar10_std).view(3,1,1).cuda()
 upper_limit = ((1 - mu)/ std)
 lower_limit = ((0 - mu)/ std)
 
+class AverageMeter(object):
+    """Computes and stores the average and current value"""
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, val, n=1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
+        self.avg = self.sum / self.count
+
+def initiate_logger(output_path):
+    if not os.path.exists(os.path.join('output', output_path)):
+        os.mkdir(os.path.join('output', output_path))
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger()
+    logger.addHandler(logging.FileHandler(os.path.join('output', output_path, 'log.txt'),'w'))
+    logger.info(pad_str(' LOGISTICS '))
+    logger.info('Experiment Date: {}'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M')))
+    logger.info('Output Name: {}'.format(output_path))
+    logger.info('User: {}'.format(os.getenv('USER')))
+
+    return logger
 
 def clamp(X, lower_limit, upper_limit):
     return torch.max(torch.min(X, upper_limit), lower_limit)
+
+def pad_str(msg, total_len=70):
+    rem_len = total_len - len(msg)
+    return '*'*int(rem_len/2) + msg + '*'*int(rem_len/2)\
+
+def accuracy(output, target, topk=(1,)):
+    """Computes the accuracy over the k top predictions for the specified values of k"""
+    with torch.no_grad():
+        maxk = max(topk)
+        batch_size = target.size(0)
+
+        _, pred = output.topk(maxk, 1, True, True)
+        pred = pred.t()
+        correct = pred.eq(target.view(1, -1).expand_as(pred))
+
+        res = []
+        for k in topk:
+            correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
+            res.append(correct_k.mul_(100.0 / batch_size))
+        return res
 
 
 def get_loaders(dir_, batch_size, num_workers, crop_size):
@@ -101,6 +153,7 @@ def evaluate_pgd(test_loader, model, attack_iters, restarts):
             pgd_loss += loss.item() * y.size(0)
             pgd_acc += (output.max(1)[1] == y).sum().item()
             n += y.size(0)
+        #print("EVALUATE_PGD: " + str(pgd_acc))
     return pgd_loss/n, pgd_acc/n
 
 
@@ -117,4 +170,5 @@ def evaluate_standard(test_loader, model):
             test_loss += loss.item() * y.size(0)
             test_acc += (output.max(1)[1] == y).sum().item()
             n += y.size(0)
+            #print("EVALUATE STANDARD: " + str(test_acc))
     return test_loss/n, test_acc/n

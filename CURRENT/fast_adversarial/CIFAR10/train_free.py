@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch-size', default=128, type=int)
-    parser.add_argument('--data-dir', default='../../cifar-data', type=str)
+    parser.add_argument('--data-dir', default='../../data', type=str)
     parser.add_argument('--epochs', default=10, type=int, help='Total number of epochs will be this argument * number of minibatch replays.')
     parser.add_argument('--lr-schedule', default='cyclic', type=str, choices=['cyclic', 'multistep'])
     parser.add_argument('--lr-min', default=0., type=float)
@@ -42,7 +42,7 @@ def get_args():
 def main():
     args = get_args()
 
-    if not os.path.exists(args.out_dir):
+    if not os.path.exists(args.out_dir+"_new_resnet50"):
         os.mkdir(args.out_dir)
     logfile = os.path.join(args.out_dir, 'output.log')
     if os.path.exists(logfile):

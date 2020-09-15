@@ -72,8 +72,8 @@ def cifarTest(epoch,net,criterion,testloader,logger):
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
 
-            logger.info("[CIFARTEST]",batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-                         % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
+            logger.info("[CIFARTEST]" + str(batch_idx) + str(len(testloader)) + 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
+                         %(test_loss/(batch_idx+1), 100.*correct/total, correct, total))
 
 def initiate_logger(output_path):
     if not os.path.isdir(os.path.join('output', output_path)):

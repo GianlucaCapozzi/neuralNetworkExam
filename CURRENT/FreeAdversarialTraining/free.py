@@ -21,7 +21,7 @@ import torchvision.models as models
 from wideresnet import *
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
+    parser = argparse.ArgumentParser(description='PyTorch CIFAR-10 Training')
     parser.add_argument('--output_prefix', default='free_adv', type=str,
                     help='prefix used to define output path')
     parser.add_argument('-c', '--config', default='configs.yml', type=str, metavar='Path',
@@ -32,6 +32,7 @@ def parse_args():
                     help='evaluate model on validation set')
     parser.add_argument('--pretrained', dest='pretrained', action='store_true',
                     help='use pre-trained model')
+    parser.add_argument('--seed', default=0, type=int, help='Random seed')
     return parser.parse_args()
 
 
@@ -52,6 +53,10 @@ def main():
     configs.TRAIN.epochs = int(math.ceil(configs.TRAIN.epochs / configs.ADV.n_repeats))
     configs.ADV.fgsm_step /= configs.DATA.max_color_value
     configs.ADV.clip_eps /= configs.DATA.max_color_value
+
+    np.random.seed(configs.seed)
+    torch.manual_seed(configs.seed)
+    torch.cuda.manual_seed(configs.seed)
     
     # Create output folder
     if not os.path.isdir(os.path.join('trained_models', configs.output_name)):
@@ -66,10 +71,12 @@ def main():
     # Create the model
     if configs.pretrained:
         print("=> using pre-trained model '{}'".format(configs.TRAIN.arch))
-        model = WideResNet().to(device)
+        #model = WideResNet().to(device)
+        models.__dict__[configs.TRAIN.arch](pretrained=True)
     else:
         print("=> creating model '{}'".format(configs.TRAIN.arch))
-        model = WideResNet().to(device)
+        #model = WideResNet().to(device)
+        model = models.__dict__[configs.TRAIN.arch]()
 
     # Wrap the model into DataParallel
     model = torch.nn.DataParallel(model).cuda()

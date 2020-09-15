@@ -1,10 +1,10 @@
 TRAIN:
     # Number of training epochs
-    epochs: 180 # original 90
+    epochs: 720 # original 90
     
     # Architecture name, see pytorch models package for
     # a list of possible architectures
-    arch: 'wide-resnet'
+    arch: 'resnet50'
 
     # Starting epoch
     start_epoch: 0
@@ -40,7 +40,7 @@ DATA:
     workers: 4
 
     # Training batch size
-    batch_size: 50
+    batch_size: 250
 
     # Image Size
     img_size: 256
