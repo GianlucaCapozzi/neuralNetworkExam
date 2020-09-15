@@ -1,0 +1,21 @@
+***************************** LOGISTICS *****************************
+Experiment Date: 2020-09-14 00:12
+Output Name: free_adv_step4_eps4_repeat4_resnet50
+User: giuppo
+Running on cuda
+***************************** ARGUMENTS *****************************
+TRAIN: {'epochs': 23, 'arch': 'resnet50', 'start_epoch': 0, 'lr': 0.1, 'momentum': 0.9, 'weight_decay': 0.0001, 'print_freq': 10, 'mean': [0.4914, 0.4822, 0.4465], 'std': [0.2471, 0.2435, 0.2616]}
+ADV: {'clip_eps': 0.01568627450980392, 'fgsm_step': 0.01568627450980392, 'n_repeats': 4, 'pgd_attack': [(10, 0.00392156862), (50, 0.00392156862)]}
+DATA: {'workers': 4, 'batch_size': 4, 'img_size': 256, 'crop_size': 32, 'max_color_value': 255.0}
+output_prefix: free_adv
+config: configs.yml
+resume: 
+evaluate: False
+pretrained: False
+output_name: free_adv_step4_eps4_repeat4
+**********************************************************************
+=> creating model 'resnet50'
+Train Epoch: [0][0/12500]	Time 0.731 (0.731)	Data 0.000 (0.000)	Loss 2.3423 (2.3423)	Prec@1 0.000 (0.000)	Prec@5 50.000 (50.000)
+Train Epoch: [0][0/12500]	Time 0.049 (0.390)	Data 0.000 (0.000)	Loss 1.1545 (1.7484)	Prec@1 50.000 (25.000)	Prec@5 100.000 (75.000)
+Train Epoch: [0][0/12500]	Time 0.087 (0.289)	Data 0.000 (0.000)	Loss 0.7055 (1.4008)	Prec@1 50.000 (33.333)	Prec@5 100.000 (83.333)
+Train Epoch: [0][0/12500]	Time 0.084 (0.238)	Data 0.000 (0.000)	Loss 0.2546 (1.1142)	Prec@1 100.000 (50.000)	Prec@5 100.000 (87.500)
