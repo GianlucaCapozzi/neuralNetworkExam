@@ -142,6 +142,7 @@ def evaluate_pgd(test_loader, model, attack_iters, restarts):
     alpha = (2 / 255.) / std
     pgd_loss = 0
     pgd_acc = 0
+    pgd_err = 0
     n = 0
     model.eval()
     for i, (X, y) in enumerate(test_loader):
@@ -152,14 +153,15 @@ def evaluate_pgd(test_loader, model, attack_iters, restarts):
             loss = F.cross_entropy(output, y)
             pgd_loss += loss.item() * y.size(0)
             pgd_acc += (output.max(1)[1] == y).sum().item()
+            pgd_err += (output.max(1)[1] != y).sum().item()
             n += y.size(0)
-        #print("EVALUATE_PGD: " + str(pgd_acc))
-    return pgd_loss/n, pgd_acc/n
+    return pgd_loss/n, pgd_acc/n, pgd_err/n
 
 
 def evaluate_standard(test_loader, model):
     test_loss = 0
     test_acc = 0
+    test_err = 0
     n = 0
     model.eval()
     with torch.no_grad():
@@ -169,6 +171,6 @@ def evaluate_standard(test_loader, model):
             loss = F.cross_entropy(output, y)
             test_loss += loss.item() * y.size(0)
             test_acc += (output.max(1)[1] == y).sum().item()
+            test_err += (output.max(1)[1] != y).sum().item()
             n += y.size(0)
-            #print("EVALUATE STANDARD: " + str(test_acc))
-    return test_loss/n, test_acc/n
+    return test_loss/n, test_acc/n, test_err/n
