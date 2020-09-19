@@ -24,11 +24,11 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch-size', default=256, type=int)
     parser.add_argument('--data-dir', default='../../data', type=str)
-    parser.add_argument('--epochs', default=200, type=int)
+    parser.add_argument('--epochs', default=90, type=int)
     parser.add_argument('--lr-schedule', default='cyclic', choices=['cyclic', 'multistep'])
     parser.add_argument('--lr-min', default=0., type=float)
-    parser.add_argument('--lr-max', default=0.1, type=float)
-    parser.add_argument('--weight-decay', default=2e-4, type=float)
+    parser.add_argument('--lr-max', default=0.2, type=float)
+    parser.add_argument('--weight-decay', default=5e-4, type=float)
     parser.add_argument('--momentum', default=0.9, type=float)
     parser.add_argument('--epsilon', default=8, type=int)
     parser.add_argument('--alpha', default=10, type=float, help='Step size')
@@ -46,7 +46,7 @@ def get_args():
     return parser.parse_args()
 
 args = get_args()
-logger = initiate_logger(args.out_dir + "_PreActResNet18")
+logger = initiate_logger("new_" + args.out_dir + "_PreActResNet18")
 print = logger.info
 cudnn.benchmark = True
 
@@ -68,6 +68,7 @@ def main():
     pgd_alpha = (2 / 255.) / std
 
     model = PreActResNet18().to(device)
+    model.train()
 
     opt = torch.optim.SGD(model.parameters(), lr=args.lr_max, momentum=args.momentum, weight_decay=args.weight_decay)
     amp_args = dict(opt_level=args.opt_level, loss_scale=args.loss_scale, verbosity=False)
@@ -106,12 +107,19 @@ def main():
 
         print("Epoch time: %.4f minutes", epoch_time)
 
+        # Evaluation
+        best_state_dict = model.state_dict()
+        model_test = PreActResNet18().cuda()
+        model_test.load_state_dict(best_state_dict)
+        model_test.float()
+        model_test.eval()
+
         # Evaluate standard acc on test set
-        test_loss, test_acc, test_err = evaluate_standard(test_loader, model)
+        test_loss, test_acc, test_err = evaluate_standard(test_loader, model_test)
         print("Test acc, err, loss: %.3f, %.3f, %.3f" %(test_acc, test_err, test_loss))
 
         # Evaluate acc against PGD attack
-        pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model, 50, 1)
+        pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 50, 1)
         print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
 
 
@@ -132,7 +140,6 @@ def train(train_loader, model, criterion, epoch, epsilon, opt, alpha, scheduler)
     top1 = AverageMeter()
     top5 = AverageMeter()
 
-    model.train()
     for i, (X, y) in enumerate(train_loader):
         end = time.time()
         X, y = X.cuda(), y.cuda()
@@ -189,7 +196,7 @@ def train(train_loader, model, criterion, epoch, epsilon, opt, alpha, scheduler)
         train_n += y.size(0)
         scheduler.step()
 
-    print("Train Accuracy: %.3f, Error: %.3f, Loss: %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
+    print("Train acc, err, loss: %.3f, %.3f, %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
 
 if __name__ == "__main__":
     main()

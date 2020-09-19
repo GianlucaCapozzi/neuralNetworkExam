@@ -25,11 +25,11 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch-size', default=256, type=int)
     parser.add_argument('--data-dir', default='../../data', type=str)
-    parser.add_argument('--epochs', default=20, type=int, help='Total number of epochs will be this argument * number of minibatch replays.')
+    parser.add_argument('--epochs', default=200, type=int, help='Total number of epochs will be this argument * number of minibatch replays.')
     parser.add_argument('--lr-schedule', default='cyclic', type=str, choices=['cyclic', 'multistep'])
     parser.add_argument('--lr-min', default=0., type=float)
-    parser.add_argument('--lr-max', default=0.1, type=float)
-    parser.add_argument('--weight-decay', default=2e-4, type=float)
+    parser.add_argument('--lr-max', default=0.04, type=float)
+    parser.add_argument('--weight-decay', default=5e-4, type=float)
     parser.add_argument('--momentum', default=0.9, type=float)
     parser.add_argument('--epsilon', default=8, type=int)
     parser.add_argument('--minibatch-replays', default=8, type=int)
@@ -64,7 +64,6 @@ def main():
     epsilon = (args.epsilon / 255.) / std
 
     model = PreActResNet18().to(device)
-    model.train()
 
     opt = torch.optim.SGD(model.parameters(), lr=args.lr_max, momentum=args.momentum, weight_decay=args.weight_decay)
     amp_args = dict(opt_level=args.opt_level, loss_scale=args.loss_scale, verbosity=False)
@@ -84,35 +83,31 @@ def main():
         scheduler = torch.optim.lr_scheduler.MultiStepLR(opt, milestones=[lr_steps / 2, lr_steps * 3 / 4], gamma=0.1)
 
     # Training
-    start_train_time = time.time()
-
+    total_time = 0
 
     for epoch in range(args.epochs):
+
+        start_train = time.time()
+
         train(train_loader, model, args.minibatch_replays, criterion, epoch, epsilon, delta, opt, scheduler)
+        
+        end_train = time.time()
+
+        epoch_time = (end_train - start_train)/60
+        total_time += epoch_time
+
+        print("Epoch time: %.4f minutes", epoch_time)
+
         # Evaluate standard acc on test set
-        test_loss, test_acc = evaluate_standard(test_loader, model)
-        logger.info('Test Loss \t Test Acc')
-        logger.info('%.4f \t \t %.4f', test_loss, test_acc)
+        test_loss, test_acc, test_err = evaluate_standard(test_loader, model)
+        print("Test acc, err, loss: %.3f, %.3f, %.3f" %(test_acc, test_err, test_loss))
 
-    train_time = time.time()
-    logger.info('Total train time: %.4f minutes', (train_time - start_train_time)/60)
+        # Evaluate acc against PGD attack
+        pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model, 50, 1)
+        print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
 
-    # Evaluation
-    best_state_dict = model.state_dict()
-    model_test = PreActResNet18().to(device)
-    model_test.load_state_dict(model.state_dict())
-    model_test.float()
-    model_test.eval()
 
-    # Evaluate standard acc on test set
-    test_loss, test_acc = evaluate_standard(test_loader, model_test)
-    logger.info('Test Loss \t Test Acc')
-    logger.info('%.4f \t \t %.4f', test_loss, test_acc)
-
-    # Evaluate acc against PGD attack
-    pgd_loss, pgd_acc = evaluate_pgd(test_loader, model_test, 50, 10)
-    logger.info('PGD Loss \t PGD Acc')
-    logger.info('%.4f \t %.4f', pgd_loss, pgd_acc)
+    logger.info('Total train time: %.4f minutes', total_time)
 
 
 def train(train_loader, model, replays, criterion, epoch, epsilon, delta, opt, scheduler):
@@ -129,6 +124,7 @@ def train(train_loader, model, replays, criterion, epoch, epsilon, delta, opt, s
     top1 = AverageMeter()
     top5 = AverageMeter()
 
+    model.train()
     for i, (X, y) in enumerate(train_loader):
         end = time.time()
         X, y = X.cuda(), y.cuda()
@@ -171,10 +167,9 @@ def train(train_loader, model, replays, criterion, epoch, epsilon, delta, opt, s
         train_err += (output.max(1)[1] != y).sum().item()
         train_n += y.size(0)
 
-    epoch_time = time.time()
     lr = scheduler.get_lr()[0]
 
-    print("Train Accuracy: %.3f, Error: %.3f, Loss: %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
+    print("Train acc, err, loss: %.3f, %.3f, %.3f" %(train_acc / len(train_loader.dataset), train_err / len(train_loader.dataset), train_loss / len(train_loader.dataset)))
 
 if __name__ == "__main__":
     main()
