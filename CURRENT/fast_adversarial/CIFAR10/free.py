@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--batch-size', default=256, type=int)
+    parser.add_argument('--batch-size', default=128, type=int)
     parser.add_argument('--data-dir', default='../../data', type=str)
-    parser.add_argument('--epochs', default=200, type=int, help='Total number of epochs will be this argument * number of minibatch replays.')
+    parser.add_argument('--epochs', default=45, type=int, help='Total number of epochs will be this argument * number of minibatch replays.')
     parser.add_argument('--lr-schedule', default='cyclic', type=str, choices=['cyclic', 'multistep'])
     parser.add_argument('--lr-min', default=0., type=float)
     parser.add_argument('--lr-max', default=0.04, type=float)
@@ -44,7 +44,7 @@ def get_args():
     return parser.parse_args()
 
 args = get_args()
-logger = initiate_logger(args.out_dir + "_PreActResNet18")
+logger = initiate_logger("new_" + args.out_dir + "_PreActResNet18")
 print = logger.info
 cudnn.benchmark = True
 
@@ -98,12 +98,19 @@ def main():
 
         print("Epoch time: %.4f minutes", epoch_time)
 
+        # Evaluation
+        best_state_dict = model.state_dict()
+        model_test = PreActResNet18().cuda()
+        model_test.load_state_dict(best_state_dict)
+        model_test.float()
+        model_test.eval()
+
         # Evaluate standard acc on test set
-        test_loss, test_acc, test_err = evaluate_standard(test_loader, model)
+        test_loss, test_acc, test_err = evaluate_standard(test_loader, model_test)
         print("Test acc, err, loss: %.3f, %.3f, %.3f" %(test_acc, test_err, test_loss))
 
         # Evaluate acc against PGD attack
-        pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model, 50, 1)
+        pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 50, 1)
         print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
 
 
@@ -124,7 +131,6 @@ def train(train_loader, model, replays, criterion, epoch, epsilon, delta, opt, s
     top1 = AverageMeter()
     top5 = AverageMeter()
 
-    model.train()
     for i, (X, y) in enumerate(train_loader):
         end = time.time()
         X, y = X.cuda(), y.cuda()
