@@ -31,7 +31,7 @@ def get_args():
     parser.add_argument('--weight-decay', default=5e-4, type=float)
     parser.add_argument('--momentum', default=0.9, type=float)
     parser.add_argument('--epsilon', default=8, type=int)
-    parser.add_argument('--alpha', default=10, type=float, help='Step size')
+    parser.add_argument('--alpha', default=16, type=float, help='Step size')
     parser.add_argument('--delta-init', default='random', choices=['zero', 'random', 'previous'],
         help='Perturbation initialization method')
     parser.add_argument('--out-dir', default='train_fast_output', type=str, help='Output directory')
@@ -46,7 +46,7 @@ def get_args():
     return parser.parse_args()
 
 args = get_args()
-logger = initiate_logger("new_" + args.out_dir + "_PreActResNet18")
+logger = initiate_logger("new_" + args.out_dir + "_PreActResNet18_128_a16")
 print = logger.info
 cudnn.benchmark = True
 
@@ -107,20 +107,28 @@ def main():
 
         print("Epoch time: %.4f minutes", epoch_time)
 
-        # Evaluation
-        best_state_dict = model.state_dict()
-        model_test = PreActResNet18().cuda()
-        model_test.load_state_dict(best_state_dict)
-        model_test.float()
-        model_test.eval()
+    # Evaluation
+    best_state_dict = model.state_dict()
+    model_test = PreActResNet18().cuda()
+    model_test.load_state_dict(best_state_dict)
+    model_test.float()
+    model_test.eval()
 
-        # Evaluate standard acc on test set
-        test_loss, test_acc, test_err = evaluate_standard(test_loader, model_test)
-        print("Test acc, err, loss: %.3f, %.3f, %.3f" %(test_acc, test_err, test_loss))
+    # Evaluate standard acc on test set
+    test_loss, test_acc, test_err = evaluate_standard(test_loader, model_test)
+    print("Test acc, err, loss: %.3f, %.3f, %.3f" %(test_acc, test_err, test_loss))
 
-        # Evaluate acc against PGD attack
-        pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 50, 1)
-        print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
+    # Evaluate acc against PGD attack
+    pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 10, 1)
+    print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
+
+    # Evaluate acc against PGD attack
+    pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 20, 1)
+    print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
+
+    # Evaluate acc against PGD attack
+    pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 50, 1)
+    print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
 
 
     logger.info('Total train time: %.4f minutes', total_time)

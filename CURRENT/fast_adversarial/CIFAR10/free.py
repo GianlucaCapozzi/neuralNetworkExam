@@ -44,7 +44,7 @@ def get_args():
     return parser.parse_args()
 
 args = get_args()
-logger = initiate_logger("new_" + args.out_dir + "_PreActResNet18")
+logger = initiate_logger("new_" + args.out_dir + "_PreActResNet18_m8")
 print = logger.info
 cudnn.benchmark = True
 
@@ -97,24 +97,31 @@ def main():
         total_time += epoch_time
 
         print("Epoch time: %.4f minutes", epoch_time)
-
-        # Evaluation
-        best_state_dict = model.state_dict()
-        model_test = PreActResNet18().cuda()
-        model_test.load_state_dict(best_state_dict)
-        model_test.float()
-        model_test.eval()
-
-        # Evaluate standard acc on test set
-        test_loss, test_acc, test_err = evaluate_standard(test_loader, model_test)
-        print("Test acc, err, loss: %.3f, %.3f, %.3f" %(test_acc, test_err, test_loss))
-
-        # Evaluate acc against PGD attack
-        pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 50, 1)
-        print("PGD acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
-
-
+    
     logger.info('Total train time: %.4f minutes', total_time)
+
+    # Evaluation
+    best_state_dict = model.state_dict()
+    model_test = PreActResNet18().cuda()
+    model_test.load_state_dict(best_state_dict)
+    model_test.float()
+    model_test.eval()
+
+    # Evaluate standard acc on test set
+    test_loss, test_acc, test_err = evaluate_standard(test_loader, model_test)
+    print("Test acc, err, loss: %.3f, %.3f, %.3f" %(test_acc, test_err, test_loss))
+
+    # Evaluate acc against PGD_10 attack
+    pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 10, 1)
+    print("PGD_10 acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
+
+    # Evaluate acc against PGD_20 attack
+    pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 20, 1)
+    print("PGD_20 acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
+
+    # Evaluate acc against PGD_50 attack
+    pgd_loss, pgd_acc, pgd_err = evaluate_pgd(test_loader, model_test, 50, 1)
+    print("PGD_50 acc, err, loss: %.3f, %.3f, %.3f" %(pgd_acc, pgd_err, pgd_loss))
 
 
 def train(train_loader, model, replays, criterion, epoch, epsilon, delta, opt, scheduler):
