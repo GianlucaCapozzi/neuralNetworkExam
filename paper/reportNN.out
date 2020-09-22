@@ -1,6 +1,8 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Adversarial Machine Learning}{}% 2
-\BOOKMARK [1][-]{section.3}{PGD attack}{}% 3
-\BOOKMARK [1][-]{section.4}{Free Adversarial training for free!}{}% 4
-\BOOKMARK [1][-]{section.5}{Fast is better than free}{}% 5
-\BOOKMARK [1][-]{section.6}{Conclusions}{}% 6
+\BOOKMARK [2][-]{subsection.1.1}{Related Works}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Dataset and architecture}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Adversarial Machine Learning}{}% 4
+\BOOKMARK [1][-]{section.3}{PGD attack}{}% 5
+\BOOKMARK [1][-]{section.4}{Free Adversarial training for free!}{}% 6
+\BOOKMARK [1][-]{section.5}{Fast is better than free}{}% 7
+\BOOKMARK [1][-]{section.6}{Conclusions}{}% 8
