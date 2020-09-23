@@ -13,6 +13,9 @@
 \usepackage{microtype}      % microtypography
 \usepackage{lipsum}
 \usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
 \graphicspath{ {./images/} }
 
 \title{FREE vs FAST adversarial training}
@@ -47,13 +50,48 @@ This caught our interest and we decided to try to replicate the reported results
 
 \subsection{Dataset and architecture}
 
-We decided to choose CIFAR-10 as the dataset on which our experiments have been conducted to adapt to the available hardware (our GPU is an Nvidia RTX 2070 super). Both WRN32  and Resnet50 have been tried as models to train on but their lack of accuracy even at high numbers of epochs suggested us to switch to shallower models, so we used PreActResnet18 which is based on Resnet18.
+We decided to choose CIFAR-10 as the dataset on which our experiments have been conducted to adapt to the available hardware (our GPU is an Nvidia RTX 2070 super). The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class.\\
+Both WRN32  and ResNet50 have been tried as models to train on but their lack of accuracy even at high numbers of epochs suggested us to switch to shallower models, so we used PreActResNet18 which is based on ResNet18.
 
 
 \section{Adversarial Machine Learning}
-Adversarial machine learning is a machine learning technique that attempts to fool models by supplying deceptive input (called also adversarial example). Adversarial examples exploit the way artificial intelligence algorithms work to disrupt the behavior of artificial intelligence algorithms. In the past few years, adversarial machine learning has become an active area of research as the role of AI continues to grow in many of the applications we use. There’s growing concern that vulnerabilities in machine learning systems can be exploited for malicious purposes.
+Adversarial machine learning is a machine learning technique that attempts to fool models by supplying deceptive input (called also adversarial example). Adversarial examples exploit the way artificial intelligence algorithms work to disrupt the behavior of artificial intelligence algorithms. In the past few years, adversarial machine learning has become an active area of research as the role of AI continues to grow in many of the applications we use. There’s growing concern that vulnerabilities in machine learning systems can be exploited for malicious purposes. The main idea to dealt with adversarial examples is represented by adversarial training; it can be traced back to \cite{GoodfellowEtAl2015}, in which models were hardened by producing adversarial examples and injecting them into training data \cite{ShafahiEtAl2019b}.\\
+This technique can be summarized as follows: given a network $f_{\theta}$ parametrized by $\theta$, a dataset ($x_i$, $y_i$), a loss function $l$ and a threat model $\Delta$, the learning problem consists in the following optimization problem:
+\begin{center}
+	$min_{\theta}{\sum_{i}l(f_{\theta}(x_i + \delta), y_i)}$
+\end{center}
+A typical choice for the adversarial model is to take $\Delta = \{\delta : ||\delta||_{\infty} \le \epsilon\}$ for some $\epsilon > 0$.
 
 \section{PGD attack}
+The PGD attack is a white-box attack, which means that the attacker has access to the model's weights, giving to the attacker much more power than a black-box attack (in which the model's weights are not known) as he can specifically craft the attack to fool the chosen model without having to rely on transfer attacks, which often result in human-visible perturbations.
+The key to understanding the PGD attack is to frame finding an adversarial example as a contrained optimisation problem. PGD attempts to find the perturbation that maximises the loss of a model on a particular input while keeping the size of the perturbation smaller than a specified amount referred to as epsilon. This constraint is usually expressed as the $l^2$ or $l^{\infty}$ norm of the perturbation and it is added so the content of the adversarial example is the same as the unperturbed sample.
+The PGD algorithm can be summarised with the 4 steps below although the attacker is free to apply any optimisation improvements such as momentum, Adam, multiple restarts etc...
+\begin{enumerate}
+	\item Start from a random perturbation in the $l^p$ ball around a sample;
+	\item Take a gradient step in the direction of the greatest loss;
+	\item Project perturbation back into the $l^p$ ball if necessary;
+	\item Repeat steps 2-3 until convergence.
+\end{enumerate}
+In our case, adversarial training consists simply of putting the PGD attack inside the training loop, applying a kind of "data augmentation"; in this case, instead of performing random transformations as a preprocessing step, we create specific perturbations that best fool the model and indeed adversarially trained models do exhibit less overfitting when trained on small datasets.\\
+The PGD attack is based on the simplest version of what is called Fast Gradient Sign Method, used to approximate the inner maximization of Delta. This could be seen as a relatively inaccurate approximation of the inner maximization for $l_{\infty}$ perturbations, and has the following closed form (as shown in \cite{GoodfellowEtAl2014}):
+\begin{center}
+	$\delta^{\star} = \epsilon \cdot sign(\Delta_{x}l(f(x), y))$.
+\end{center}
+A better approximation of the inner maximization is to take multiple, smaller FGSM steps of size alpha. When the iteration leaves the threat model, it is projected back to the set $\Delta$. Multiple restarts within the threat model $\Delta$ typically improve the approximation of the inner maximization even further. The combination of all these techniques is the PGD attack. The problem of such technique is that the number of gradient computations here is proportional to O(MK) in a single epoch, where M is the size of the dataset and K is the number of steps taken by the PGD adversary. This is K times greater than standard training so adversarial training is typically K times slower than standard training. The pseudo-code of the PGD attack is reported in Algorithm 1.
+\begin{algorithm}[H]
+	\caption{PGD adversarial training for T epochs, given some radius $\epsilon$, adversarial step size $\alpha$ and $K$ PGD steps and a a dataset of size $M$ for a network $f_{\theta}$}
+	\begin{algorithmic}[1]
+		\For{$t = 1...T$}
+		\For{$i = 1...M$}
+		\State// Perform PGD adversarial attack
+		\State $\delta = 0$ // or randomly initialized
+		\For{$j = 1...N$}
+		\State $\delta = \delta + \alpha\cdot sign(\Delta_{\delta}l(f_{\delta}(x_i + \delta), y_i))$
+		\EndFor
+		\EndFor
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
 
 \section{Free Adversarial training for free!}
 
@@ -62,21 +100,25 @@ Adversarial machine learning is a machine learning technique that attempts to fo
 \section{Conclusions}
 
 \begin{thebibliography}{100} 
-	\bibitem{TsiprasEtAl} Tsipras et al., 2018: {Dimitris Tsipras, Shibani Santurkar, Logan Engstrom, Alexander Turner, and Aleksander Madry.
+	\bibitem{TsiprasEtAl} {Dimitris Tsipras, Shibani Santurkar, Logan Engstrom, Alexander Turner, and Aleksander Madry.
 	Robustness may be at odds with accuracy. ICLR, 1050:11, 2018}
 
-	\bibitem{ZhangEtAl2019a} Zhang et al., 2019a: {Hongyang Zhang, Yaodong Yu, Jiantao Jiao, Eric P Xing, Laurent El Ghaoui, and Michael I Jordan.
+	\bibitem{ZhangEtAl2019a} {Hongyang Zhang, Yaodong Yu, Jiantao Jiao, Eric P Xing, Laurent El Ghaoui, and Michael I Jordan.
 		Theoretically principled trade-off between robustness and accuracy. ICML, 2019a.}
 	
-	\bibitem{ShafahiEtAl2019a} Shafahi et al., 2019a {Ali Shafahi, W Ronny Huang, Christoph Studer, Soheil Feizi, and Tom Goldstein. Are adversarial
+	\bibitem{ShafahiEtAl2019a} {Ali Shafahi, W Ronny Huang, Christoph Studer, Soheil Feizi, and Tom Goldstein. Are adversarial
 		examples inevitable? ICLR, 2019a.}
 	
-	\bibitem{ShafahiEtAl2019b} Shafahi et al., 2019b {Ali Shafahi, Mahyar Najibi, Amin Ghiasi, Zheng Xu, John Dickerson, Christoph Studer, Larry S
+	\bibitem{ShafahiEtAl2019b} {Ali Shafahi, Mahyar Najibi, Amin Ghiasi, Zheng Xu, John Dickerson, Christoph Studer, Larry S
 		Davis, Gavin Taylor, and Tom Goldstein. Adversarial training for free!
 		arXiv preprint
 		arXiv:1904.12843, 2019b.}
 	
-	\bibitem{WongEtAl2020} Wong et al., 2020 {Eric Wong and Leslie Rice and J. Zico Kolter, arxiv:2001.03994, 2020.}
+	\bibitem{WongEtAl2020} {Eric Wong and Leslie Rice and J. Zico Kolter. Fast is better than free: revisiting adversarial learning, arxiv:2001.03994, 2020.}
+	
+	\bibitem{GoodfellowEtAl2015} {Ian J Goodfellow, Jonathon Shlens, and Christian Szegedy. Explaining and harnessing adversarial examples. ICLR, 2015.}
+	
+	\bibitem{GoodfellowEtAl2014} {Ian J Goodfellow, Jonathon Shlens, and Christian Szegedy. Explaining and harnessing adversarial examples. arXiv preprint arXiv:1412.6572, 2014.}
 	
 \end{thebibliography}
 	
