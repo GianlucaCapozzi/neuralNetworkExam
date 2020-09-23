@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.9.19)  22 SEP 2020 17:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.9.23)  23 SEP 2020 18:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -299,25 +299,58 @@ File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 \Gin@req@height=\dimen161
 \Gin@req@width=\dimen162
 )
-(./reportNN.aux)
+(/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+
+(/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count266
+\float@exts=\toks20
+\float@box=\box46
+\@float@everytoks=\toks21
+\@floatcapt=\box47
+)
+\@float@every@algorithm=\toks22
+\c@algorithm=\count267
+)
+(/usr/share/texlive/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count268
+\c@ALG@rem=\count269
+\c@ALG@nested=\count270
+\ALG@tlm=\skip65
+\ALG@thistlm=\skip66
+\c@ALG@Lnr=\count271
+\c@ALG@blocknr=\count272
+\c@ALG@storecount=\count273
+\c@ALG@tmpcounter=\count274
+\ALG@tmplength=\skip67
+) (/usr/share/texlive/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
+Package: algpseudocode 
+
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (./reportNN.aux)
 \openout1 = `reportNN.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -385,8 +418,8 @@ LaTeX Font Info:    ... okay on input line 29.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\AtBeginShipoutBox=\box46
-Package hyperref Info: Link coloring OFF on input line 29.
+\AtBeginShipoutBox=\box48
+Package hyperref Info: Link coloring OFF on input line 32.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
@@ -396,24 +429,24 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 (/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count266
+\c@section@level=\count275
 )
-LaTeX Info: Redefining \ref on input line 29.
-LaTeX Info: Redefining \pageref on input line 29.
-LaTeX Info: Redefining \nameref on input line 29.
+LaTeX Info: Redefining \ref on input line 32.
+LaTeX Info: Redefining \pageref on input line 32.
+LaTeX Info: Redefining \nameref on input line 32.
 
 (./reportNN.out) (./reportNN.out)
 \@outlinefile=\write3
 \openout3 = `reportNN.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 29.
+LaTeX Info: Redefining \microtypecontext on input line 32.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 29.
+LaTeX Info: Redefining \showhyphens on input line 32.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -423,17 +456,17 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count267
+\scratchcounter=\count276
 \scratchdimen=\dimen163
-\scratchbox=\box47
-\nofMPsegments=\count268
-\nofMParguments=\count269
-\everyMPshowfont=\toks20
-\MPscratchCnt=\count270
+\scratchbox=\box49
+\nofMPsegments=\count277
+\nofMParguments=\count278
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count279
 \MPscratchDim=\dimen164
-\MPnumerator=\count271
-\makeMPintoPDFobject=\count272
-\everyMPtoPDFconversion=\toks21
+\MPnumerator=\count280
+\makeMPintoPDFobject=\count281
+\everyMPtoPDFconversion=\toks24
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -447,7 +480,7 @@ e
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 33.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 36.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -456,7 +489,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 33.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 36.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -466,7 +499,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 3
-3.
+6.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
@@ -479,32 +512,42 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 83.
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 82.
  [2]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 83.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 125.
+ [3]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 125.
  (./reportNN.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 83.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 83.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 125.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 125.
 Package rerunfilecheck Info: File `reportNN.out' has not changed.
 (rerunfilecheck)             Checksum: 820C35A41324F5C1313178BA0CA05046;465.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 83.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 125.
  ) 
 Here is how much of TeX's memory you used:
- 8489 strings out of 483183
- 140623 string characters out of 5966292
- 591634 words of memory out of 5000000
- 23265 multiletter control sequences out of 15000+600000
- 568438 words of font info for 86 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 40i,10n,49p,907b,323s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/gianluca/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.
-600pk>{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/te
-xlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/urw/times/utmr8a.pfb>
-Output written on reportNN.pdf (2 pages, 48611 bytes).
+ 9110 strings out of 481239
+ 149490 string characters out of 5920377
+ 600593 words of memory out of 5000000
+ 24087 multiletter control sequences out of 15000+600000
+ 572200 words of font info for 104 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 38i,10n,49p,907b,425s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texliv
+e/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/
+share/texmf/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/urw/times/utmr8a.pfb>
+Output written on reportNN.pdf (3 pages, 134812 bytes).
 PDF statistics:
- 114 PDF objects out of 1000 (max. 8388607)
- 71 compressed objects within 1 object stream
- 17 named destinations out of 1000 (max. 500000)
- 14913 words of extra memory for PDF output out of 17280 (max. 10000000)
+ 124 PDF objects out of 1000 (max. 8388607)
+ 107 compressed objects within 2 object streams
+ 25 named destinations out of 1000 (max. 500000)
+ 19009 words of extra memory for PDF output out of 20736 (max. 10000000)
 
