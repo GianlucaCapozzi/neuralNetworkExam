@@ -1,0 +1,17 @@
+***************************** LOGISTICS *****************************
+Experiment Date: 2020-09-14 00:13
+Output Name: free_adv_step2_eps8_repeat8_wide-resnet
+User: giuppo
+Running on cuda
+***************************** ARGUMENTS *****************************
+TRAIN: {'epochs': 23, 'arch': 'wide-resnet', 'start_epoch': 0, 'lr': 0.1, 'momentum': 0.9, 'weight_decay': 0.0002, 'print_freq': 10, 'mean': [0.4914, 0.4822, 0.4465], 'std': [0.2471, 0.2435, 0.2616]}
+ADV: {'clip_eps': 0.03137254901960784, 'fgsm_step': 0.00784313725490196, 'n_repeats': 8, 'pgd_attack': [(10, 0.00392156862), (50, 0.00392156862)]}
+DATA: {'workers': 4, 'batch_size': 256, 'img_size': 256, 'crop_size': 32, 'max_color_value': 255.0}
+output_prefix: free_adv
+config: configs.yml
+resume: 
+evaluate: False
+pretrained: False
+output_name: free_adv_step2_eps8_repeat8
+**********************************************************************
+=> creating model 'wide-resnet'
