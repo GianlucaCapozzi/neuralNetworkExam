@@ -75,7 +75,7 @@ The PGD algorithm can be summarised with the 4 steps below although the attacker
 In our case, adversarial training consists simply of putting the PGD attack inside the training loop, applying a kind of "data augmentation"; in this case, instead of performing random transformations as a preprocessing step, we create specific perturbations that best fool the model and indeed adversarially trained models do exhibit less overfitting when trained on small datasets.\\
 The PGD attack is based on the simplest version of what is called Fast Gradient Sign Method, used to approximate the inner maximization of Delta. This could be seen as a relatively inaccurate approximation of the inner maximization for $l_{\infty}$ perturbations, and has the following closed form (as shown in \cite{GoodfellowEtAl2014}):
 \begin{center}
-	$\delta^{\star} = \epsilon \cdot sign(\Delta_{x}l(f(x), y))$.
+	$\delta^{\star} = \epsilon \cdot sign(\nabla_{x}l(f(x), y))$.
 \end{center}
 A better approximation of the inner maximization is to take multiple, smaller FGSM steps of size alpha. When the iteration leaves the threat model, it is projected back to the set $\Delta$. Multiple restarts within the threat model $\Delta$ typically improve the approximation of the inner maximization even further. The combination of all these techniques is the PGD attack. The problem of such technique is that the number of gradient computations here is proportional to O(MK) in a single epoch, where M is the size of the dataset and K is the number of steps taken by the PGD adversary. This is K times greater than standard training so adversarial training is typically K times slower than standard training. The pseudo-code of the PGD attack is reported in Algorithm 1.
 \begin{algorithm}[H]
@@ -87,27 +87,29 @@ A better approximation of the inner maximization is to take multiple, smaller FG
 		\State $\delta = 0$ // or randomly initialized
 		\For{$j = 1...N$}
 		\State $\delta = \delta + \alpha\cdot sign(\Delta_{\delta}l(f_{\delta}(x_i + \delta), y_i))$
+		\State $\delta = max(min(\delta, \epsilon), -\epsilon)$
 		\EndFor
+		\State$\theta = \theta - \nabla_{\theta}l(f_{\theta}(x_i + \delta), y_i)$ // Update model weights with some optimizer, e.g. SGD
 		\EndFor
 		\EndFor
 	\end{algorithmic}
 \end{algorithm}
+The execution of K-PGD in \cite{MadryEtAl2017} took four days on a Titan X (with model WideResNet and dataset CIFAR-10). This led us to consider the reported results obtained using this adversarial training, without running them directly.
+
 
 \section{Free Adversarial training for free!}
+
 
 \section{Fast is better than free}
 
 \section{Conclusions}
 
 \begin{thebibliography}{100} 
-	\bibitem{TsiprasEtAl} {Dimitris Tsipras, Shibani Santurkar, Logan Engstrom, Alexander Turner, and Aleksander Madry.
-	Robustness may be at odds with accuracy. ICLR, 1050:11, 2018}
+	\bibitem{TsiprasEtAl} {Dimitris Tsipras, Shibani Santurkar, Logan Engstrom, Alexander Turner, and Aleksander Madry. Robustness may be at odds with accuracy. ICLR, 1050:11, 2018}
 
-	\bibitem{ZhangEtAl2019a} {Hongyang Zhang, Yaodong Yu, Jiantao Jiao, Eric P Xing, Laurent El Ghaoui, and Michael I Jordan.
-		Theoretically principled trade-off between robustness and accuracy. ICML, 2019a.}
+	\bibitem{ZhangEtAl2019a} {Hongyang Zhang, Yaodong Yu, Jiantao Jiao, Eric P Xing, Laurent El Ghaoui, and Michael I Jordan. Theoretically principled trade-off between robustness and accuracy. ICML, 2019a.}
 	
-	\bibitem{ShafahiEtAl2019a} {Ali Shafahi, W Ronny Huang, Christoph Studer, Soheil Feizi, and Tom Goldstein. Are adversarial
-		examples inevitable? ICLR, 2019a.}
+	\bibitem{ShafahiEtAl2019a} {Ali Shafahi, W Ronny Huang, Christoph Studer, Soheil Feizi, and Tom Goldstein. Are adversarial examples inevitable? ICLR, 2019a.}
 	
 	\bibitem{ShafahiEtAl2019b} {Ali Shafahi, Mahyar Najibi, Amin Ghiasi, Zheng Xu, John Dickerson, Christoph Studer, Larry S
 		Davis, Gavin Taylor, and Tom Goldstein. Adversarial training for free!
@@ -119,6 +121,8 @@ A better approximation of the inner maximization is to take multiple, smaller FG
 	\bibitem{GoodfellowEtAl2015} {Ian J Goodfellow, Jonathon Shlens, and Christian Szegedy. Explaining and harnessing adversarial examples. ICLR, 2015.}
 	
 	\bibitem{GoodfellowEtAl2014} {Ian J Goodfellow, Jonathon Shlens, and Christian Szegedy. Explaining and harnessing adversarial examples. arXiv preprint arXiv:1412.6572, 2014.}
+	
+	\bibitem{MadryEtAl2017} {Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipras, and Adrian Vladu. Towards deep learning models resistant to adversarial attacks. ICLR, 2017.}
 	
 \end{thebibliography}
 	
