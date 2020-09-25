@@ -4,5 +4,8 @@
 \BOOKMARK [1][-]{section.2}{Adversarial Machine Learning}{}% 4
 \BOOKMARK [1][-]{section.3}{PGD attack}{}% 5
 \BOOKMARK [1][-]{section.4}{Free Adversarial training for free!}{}% 6
-\BOOKMARK [1][-]{section.5}{Fast is better than free}{}% 7
-\BOOKMARK [1][-]{section.6}{Conclusions}{}% 8
+\BOOKMARK [2][-]{subsection.4.1}{Experiments results}{section.4}% 7
+\BOOKMARK [1][-]{section.5}{Fast is better than free}{}% 8
+\BOOKMARK [2][-]{subsection.5.1}{Experiments results}{section.5}% 9
+\BOOKMARK [1][-]{section.6}{Free vs Fast}{}% 10
+\BOOKMARK [1][-]{section.7}{Conclusions}{}% 11
