@@ -28,7 +28,7 @@ with open(FILENAME,"r") as f:
             test["acc"].append( float(values[0]))
             test["err"].append( float(values[1]))
             test["loss"].append( float(values[2]))
-        elif(line.split(" ")[0] == "PGD"):
+        elif(line.split(" ")[0] == "PGD" or line.split(" ")[0] == "PGD_50"):
             values = line.split(":")[1].split(",")
             pgd["acc"].append( float(values[0]))
             pgd["err"].append( float(values[1]))
