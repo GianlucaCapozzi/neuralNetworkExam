@@ -1,0 +1,6 @@
+***************************** LOGISTICS *****************************
+Experiment Date: 2020-09-25 13:13
+Output Name: train_fast_output_PreActResNet18
+User: giuppo
+Running on cuda
+Train Epoch: [0][0/196]	Time 2.235 (2.235)	Data 0.000 (0.000)	Loss 2.9229 (2.9229)	Prec@1 0.000 (0.000)	Prec@5 0.391 (0.391)

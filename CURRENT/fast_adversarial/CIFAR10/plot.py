@@ -14,7 +14,7 @@ max_test = [-1.,-1.,""]
 max_pgd =  [-1.,-1.,""]
 last_epoch = ""
 
-PATH = "output/new_train_fast_output_PreActResNet18"
+PATH = "output/fast_resnet"
 FILENAME = PATH + "/log.txt"
 
 with open(FILENAME,"r") as f:

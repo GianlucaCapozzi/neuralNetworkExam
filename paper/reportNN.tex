@@ -152,6 +152,19 @@ The following table shows the results of our experiments:
 
 \section{Fast is better than free}
 
+Wong et al. (2019) consider it possible to have shorter times than Shafai et al. (2019) “free” method using FGSM,  when Shafai et al. claim to spend 10 hours (200 epochs) to learn a robust CIFAR10 [??? non dal paper di free] , while standard training requires minutes. Similarly for Imagenet.  
+A key difference between FGSM and free adversarial training is that in the latter the perturbation from the previous minibatch is a reasonable starting point for the next minibatch, while FGSM can be used as it is just starting from a non-zero initial perturbation.
+So “fast” adversarial training is just standard FGSM with random initialization for the perturbation and this is claimed to be as effective as PGD adversarial training.
+For this adversarial training one crucial parameter is the step size $\alpha$ that shows results on par with “Free” ones only choosing values in a particular interval. Indeed, two failure modes arise: 
+\begin{itemize}
+
+\item a step size too small ($\alpha$ =$\epsilon$) would mean a zero-initialized perturbation and lead to a too weak defense
+\item a step size too large ($\alpha$ = $2\epsilon$) will lead to a model overfitted, restricted to specific threats (“catastrophic overfitting”).
+\end{itemize}
+
+A good compromise is shown to be: $\alpha$ = 1.25, $\epsilon$ = 10/255.
+Another key difference is that FGSM does not need to repeat mini-batches but needs two backward passes to compute gradients separately from the perturbation and the model weights. From a computational complexity point of view this means that an epoch of FGSM is equivalent to two epochs of standard training.
+
 
 
 \begin{center}
@@ -168,6 +181,18 @@ The following table shows the results of our experiments:
 \end{table}
 \end{center}
 \section{Conclusions}
+
+
+\begin{table}[]
+\begin{tabular}{|l|p{2.5cm}|l|l|l|l|l|l|l|l|}
+\hline
+                                             & \multicolumn{1}{l|}{}      & \multicolumn{4}{c|}{\textbf{Accuracy using PreActResNet18}}                                                                                                       & \multicolumn{3}{l|}{}                                                                                                                 &                                          \\ \hline
+                                    & \textbf{Minibatch-replays (m) $/$step\_size ($\alpha$)} & \multicolumn{1}{p{1.5cm}|}{\textbf{Natural Images}} & \multicolumn{1}{c|}{\textbf{PGD-10}} & \multicolumn{1}{c|}{\textbf{PGD-20}} & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{c|}{\textbf{Train Time}}                  & \multicolumn{1}{p{1.5cm}|}{\textbf{Avg Epoch Time}} & \multicolumn{1}{c|}{\textbf{Batch size}} \\ \hline
+\multicolumn{1}{|c|}{\textit{\textbf{FREE}}} & \textit{\textbf{m = 8}}             & { 0.839}                 & { 0.498}         & { 0.486}         & { 0.483}         & { 45}           & { 88 minutes}                         & 117 seconds                                  & 128                                      \\ \hline
+\multicolumn{1}{|c|}{\textit{\textbf{FAST}}} & $\alpha = 10$                    & { 0.847}                 & { 0.480}         & { 0.463}         & { 0.450}         & { 45}           &  21 minutes & 28.8 seconds                                 & 128                                      \\ \hline
+\end{tabular}
+\end{table}
+
 
 \begin{thebibliography}{100} 
 	\bibitem{TsiprasEtAl} {Dimitris Tsipras, Shibani Santurkar, Logan Engstrom, Alexander Turner, and Aleksander Madry. Robustness may be at odds with accuracy. ICLR, 1050:11, 2018}
