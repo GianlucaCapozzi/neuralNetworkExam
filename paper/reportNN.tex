@@ -303,7 +303,8 @@ $\alpha$ = 10 & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}           
 \end{figure}
 \newpage
 
-\section{Free vs Fast}
+\section{Final Experiments}
+\subsection{Free vs Fast using PreActResnet18}
 In this section we compare the best results we obtained from the precedent experiments,
 then showing the evolution of validation accuracy in these two methods. 
 \\
@@ -332,6 +333,9 @@ The following table contains the best m and batch size values for free method, o
   \label{fig:coffee}
 \end{figure}
 
+\subsection{Free vs Fast using ResNet50}
+
+
 \begin{table}[hbt!]
 \begin{tabular}{|l|p{2.1cm}|c|l|l|l|l|l|}
 \hline
@@ -341,6 +345,8 @@ The following table contains the best m and batch size values for free method, o
 \textbf{FAST} & $\alpha = 10/255$       & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}           & { 29}                     & { 19}                         & { 128}               \\ \hline
 \end{tabular}
 \end{table}
+
+\newpage
 
 
 \begin{figure}[hbt!]
@@ -357,16 +363,20 @@ The following table contains the best m and batch size values for free method, o
   \label{fig:coffee}
 \end{figure}
 
+\subsection{PreAct18 vs ResNet50}
+In the following two charts we compare the evolution of Free adv.learning using the two different models ResNet50 and PreActResnet18.
+
+
 
 \begin{figure}[hbt!]
   \centering
   \begin{subfigure}[b]{0.4\linewidth}
     \includegraphics[width=\linewidth]{images/freeComp/Figure_1.png}
-    \caption{ Validation accuracies.}
+    \caption{Preact18 vs Resnet50  Validation accuracies.}
   \end{subfigure}
   \begin{subfigure}[b]{0.4\linewidth}
     \includegraphics[width=\linewidth]{images/freeComp/Figure_2.png}
-    \caption{PGD validation accuracies.}
+    \caption{Preact18 vs Resnet50 PGD validation accuracies.}
   \end{subfigure}
   \caption{Free Adversarial training (epsilon = 8/255, m = 8, batch size = 128,  epochs = 90)}
   \label{fig:coffee}
@@ -377,19 +387,19 @@ The following table contains the best m and batch size values for free method, o
   \centering
   \begin{subfigure}[b]{0.4\linewidth}
     \includegraphics[width=\linewidth]{images/fastComp/Figure_1.png}
-    \caption{ Validation accuracies.}
+    \caption{ Preact18 vs Resnet50 Validation accuracies.}
   \end{subfigure}
   \begin{subfigure}[b]{0.4\linewidth}
     \includegraphics[width=\linewidth]{images/fastComp/Figure_2.png}
-    \caption{PGD validation accuracies.}
+    \caption{Preact18 vs Resnet50 PGD validation accuracies.}
   \end{subfigure}
-  \caption{Fast Adversarial training using ResNet50 (epsilon = 8/255, $\alpha$ = 10/255, batch size = 128,  epochs = 90)}
+  \caption{Fast Adversarial training (epsilon = 8/255, $\alpha$ = 10/255, batch size = 128,  epochs = 90)}
   \label{fig:coffee}
 \end{figure}
 
 
-The following charts offer the possibility to compare the evolution of test and PGD accuracies over the epochs.
 
+\newpage
 \section{Conclusions}
 Wong et al.'s paper about was useful to reconsider FGSM as a feasible method for adversarial training once step size parameter is tuned correctly, and how simple optimization operations on learning rate adaptation (Cyclic Learning Rate) or based on hardware compatibility with mixed precision computation (Mixed-precision arithmetic) can decrease computation time, with small effort.
 FGSM shows results similar to the ones obtained from the "Free" method, considering the same number of epochs, but the total training time suggests FGSM as a faster and better method to speed up adversarial training compared to free, based on our experiments on CIFAR10.   

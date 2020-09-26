@@ -7,5 +7,8 @@
 \BOOKMARK [2][-]{subsection.4.1}{Experiments results}{section.4}% 7
 \BOOKMARK [1][-]{section.5}{Fast is better than free}{}% 8
 \BOOKMARK [2][-]{subsection.5.1}{Experiments results}{section.5}% 9
-\BOOKMARK [1][-]{section.6}{Free vs Fast}{}% 10
-\BOOKMARK [1][-]{section.7}{Conclusions}{}% 11
+\BOOKMARK [1][-]{section.6}{Final Experiments}{}% 10
+\BOOKMARK [2][-]{subsection.6.1}{Free vs Fast using PreActResnet18}{section.6}% 11
+\BOOKMARK [2][-]{subsection.6.2}{Free vs Fast using ResNet50}{section.6}% 12
+\BOOKMARK [2][-]{subsection.6.3}{PreAct18 vs ResNet50}{section.6}% 13
+\BOOKMARK [1][-]{section.7}{Conclusions}{}% 14
