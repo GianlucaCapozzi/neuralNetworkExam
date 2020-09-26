@@ -21,7 +21,7 @@ last_epoch = ""
 
 
 
-PATH1 = "output/new_train_fast_output_ResNet50_128_a10_e90"
+PATH1 = "output/new_train_free_output_ResNet50_m8_e90"
 FILENAME1 = PATH1 + "/log.txt"
 
 PATH2 = "output/new_train_free_output_PreActResNet18_m8_e90"
