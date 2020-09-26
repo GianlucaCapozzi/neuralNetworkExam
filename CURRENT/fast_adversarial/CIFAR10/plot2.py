@@ -24,7 +24,7 @@ last_epoch = ""
 PATH1 = "output/new_train_fast_output_ResNet50_128_a10_e90"
 FILENAME1 = PATH1 + "/log.txt"
 
-PATH2 = "output/new_train_fast_output_PreActResNet18_128_a10_e90"
+PATH2 = "output/new_train_free_output_PreActResNet18_m8_e90"
 FILENAME2 = PATH2 + "/log.txt"
 
 with open(FILENAME1,"r") as f:
@@ -131,9 +131,9 @@ acc_val2 = test2["acc"]
 
 epochs = range(1,len(test["acc"])+1)
 
-plt.plot(epochs, acc_val, c='b', label='Free Validation Acc.')
-plt.plot(epochs, acc_val2, c='g', label='Fast Validation Acc.')
-plt.title('Free vs Fast Validation Acc.')
+plt.plot(epochs, acc_val, c='b', label='ResNet50 Validation Acc.')
+plt.plot(epochs, acc_val2, c='g', label='PreAct18 Validation Acc.')
+plt.title('Free ResNet50 vs Free PreActResNet18 Validation Acc.')
 plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
@@ -151,9 +151,9 @@ acc_val2 = pgd2["acc"]
 
 epochs = range(1,len(pgd["acc"])+1)
 
-plt.plot(epochs, acc_val, c='b', label='Free PGD-50 Acc.')
-plt.plot(epochs, acc_val2, c='g', label='Fast PGD-50 Acc.')
-plt.title('Free vs Fast PGD-50 Acc.')
+plt.plot(epochs, acc_val, c='b', label='ResNet50 PGD-50 Acc.')
+plt.plot(epochs, acc_val2, c='g', label='PreAct18 PGD-50 Acc.')
+plt.title('Free ResNet50 vs Free PreActResNet18 PGD-50 Acc.')
 plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
