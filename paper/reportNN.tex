@@ -308,15 +308,37 @@ In this section we compare the best results we obtained from the precedent exper
 then showing the evolution of validation accuracy in these two methods. 
 \\
 The following table contains the best m and batch size values for free method, obtained from the different free experiments compared with the best step size and batch size for FGSM. 
+\begin{table}[hbt!]
+\begin{tabular}{|l|p{2.1cm}|c|l|l|l|l|l|}
+\hline
+              & \multicolumn{1}{l|}{}         & \multicolumn{2}{c|}{\textbf{Accuracy using PreactResnet18}}                         & \multicolumn{3}{l|}{\textbf{}}                                                                                                            & \textbf{}                                \\ \hline
+ & \textbf{Minibatch-replays (m) / step size ($\alpha$)} & \textbf{Natural Images}                      & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{p{1cm}|}{\textbf{Train Time (min)}} & \multicolumn{1}{p{1cm}|}{\textbf{Avg Epoch Time (sec)}} & \multicolumn{1}{c|}{\textbf{Batch size}} \\ \hline
+\textbf{FREE} & m = 8 & \multicolumn{1}{l|}{0.845} & { 0.485}         & { 90}           & { 176}                     & { 117}                         & { 128}               \\ \hline
+\textbf{FAST} & $\alpha = 10/255$       & \multicolumn{1}{l|}{0.836} & { 0.434}         & { 90}           & { 43}                     & { 28}                         & { 128}               \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/freeComp/Figure_1.png}
+    \caption{ Train and validation accuracies results.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/freeComp/Figure_5.png}
+    \caption{PGD validation accuracy}
+  \end{subfigure}
+  \caption{Free Adversarial training using ResNet50 (epsilon = 8/255, m = 8, batch size = 128,  epochs = 90)}
+  \label{fig:coffee}
+\end{figure}
 
 \begin{table}[hbt!]
-\centering
-\begin{tabular}{|l|p{2.1cm}|l|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|p{2.1cm}|c|l|l|l|l|l|}
 \hline
-                                             & \multicolumn{1}{l|}{}      & \multicolumn{4}{c|}{\textbf{Accuracy using PreActResNet18}}                                                                                                       & \multicolumn{3}{l|}{}                                                                                                                 &                                          \\ \hline
-                                    & \textbf{Minibatch-replays$\,(m)$ $/$step\_size ($\alpha$)} & \multicolumn{1}{p{1.5cm}|}{\textbf{Natural Images}} & \multicolumn{1}{c|}{\textbf{PGD-10}} & \multicolumn{1}{c|}{\textbf{PGD-20}} & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{p{1.0cm}|}{\textbf{Train Time (min)}}                  & \multicolumn{1}{p{1.0cm}|}{\textbf{Avg Epoch Time (sec)}} & \multicolumn{1}{p{1cm}|}{\textbf{Batch size}} \\ \hline
-\multicolumn{1}{|c|}{\textit{\textbf{FREE}}} & \textit{m = 8}             & { 0.839}                 & { 0.498}         & { 0.486}         & { 0.483}         & { 45}           & { 88 } & 117 & 128                                      \\ \hline
-\multicolumn{1}{|c|}{\textit{\textbf{FAST}}} & $\mathbold{\alpha}$ = 10               & { 0.847}                 & { 0.480}         & { 0.463}         & { 0.450}         & { 45}           &  21 & 28.8 & 128                                      \\ \hline
+              & \multicolumn{1}{l|}{}         & \multicolumn{2}{c|}{\textbf{Accuracy using ResNet50}}                         & \multicolumn{3}{l|}{\textbf{}}                                                                                                            & \textbf{}                                \\ \hline
+ & \textbf{Minibatch-replays (m) / step size ($\alpha$)} & \textbf{Natural Images}                      & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{p{1cm}|}{\textbf{Train Time (min)}} & \multicolumn{1}{p{1cm}|}{\textbf{Avg Epoch Time (sec)}} & \multicolumn{1}{c|}{\textbf{Batch size}} \\ \hline
+\textbf{FREE} & m = 8 & \multicolumn{1}{l|}{0.735} & { 0.404}         & { 90}           & { 176}                     & { 117}                         & { 128}               \\ \hline
+\textbf{FAST} & $\alpha = 10/255$       & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}           & { 29}                     & { 19}                         & { 128}               \\ \hline
 \end{tabular}
 \end{table}
 
