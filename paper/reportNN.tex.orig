@@ -18,6 +18,10 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \graphicspath{ {./images/} }
+\usepackage{fixmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
 
 \DeclareMathOperator{\EX}{\mathbb{E}}% expected value
 
@@ -54,7 +58,8 @@ This caught our interest and we decided to try to replicate the reported results
 \subsection{Dataset and architecture}
 
 We decided to choose CIFAR-10 as the dataset on which our experiments have been conducted to adapt to the available hardware (our GPU is an Nvidia RTX 2070 super). The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class.\\
-Both WRN32  and ResNet50 have been tried as models to train on but their lack of accuracy even at high numbers of epochs suggested us to switch to shallower models, so we used PreActResNet18 which is based on ResNet18.
+We conducted adversarial training examples using as models ResNet50 and PreActResNet18. 
+Both ResNet50 and PreActResnet18 results have been reported and compared between them, under the same conditions. 
 
 
 \section{Adversarial Machine Learning}
@@ -99,11 +104,12 @@ A better approximation of the inner maximization is to take multiple, smaller FG
 \end{algorithm}
 The execution of K-PGD in \cite{MadryEtAl2017} took four days on a Titan X (with model WideResNet and dataset CIFAR-10). This led us to consider the reported results obtained using this adversarial training, without running them directly.
 
-
-
 \section{Free Adversarial training for free!}
 
-<<<<<<< Updated upstream
+Free adversarial training \cite{ShafahiEtAl2019b} claims to reduce the overhead compared to natural training through the computation of ascent step by reusing the backward pass needed for the descent step. So, the gradient with respect to the network parameters is computed on the backward pass and later on this same backward pass the gradient of the loss with respect to the input image is also computed.\\
+In order to allow multiple adversarial updates on the same image the training is made on the same minibatch \textit{m} times in a row. Every minibatch is repeated m times before switching to the next minibatch (“minibatch replays”), so the number of epochs can be considered the number of epochs divided by m, such that the overall number of training iterations remains constant. Note that perturbations are not reset between mini-batches. The value of this parameter is shown to be crucial, since increasing m comes with the risk of increasing generalization error so robustness is increased at the cost of validation accuracy on natural images.\\
+The pseudocode of Free is shown in Algorithm 2.
+
 \begin{algorithm}[H]
 	\caption{"Free" Adversarial Training (Free-m)}
 	\begin{algorithmic}[1]
@@ -125,45 +131,98 @@ The execution of K-PGD in \cite{MadryEtAl2017} took four days on a Titan X (with
 		\EndFor
 	\end{algorithmic}
 \end{algorithm}
-=======
-Shafai et al. (2019) with Free adversarial training claims to reduce the overhead compared to natural training through the computation of ascent step by reusing the backward pass needed for the descent step. So the gradient with respect to the network parameters is computed on the backward pass and later on this same backward pass the gradient of the loss with respect to the input image is also computed. In order to allow multiple adversarial updates on the same image the training is made on the same minibatch \textit{m} times in a row. 
-
-
-Every minibatch is repeated m times before switching to the next minibatch (“minibatch replays”), so the number of epochs can be considered the number of epochs divided by m, such that the overall number of training iterations remains constant. 
-
-
-Note that perturbations are not reset between mini-batches. The value of this parameter is shown to be crucial, since increasing m comes with the risk of increasing generalization error so robustness is increased at the cost of validation accuracy on natural images.
 
 It may be possible that catastrophic forgetting happens, e.g. when all the “informative” images of one class are in the first few mini-batches. In this extreme case, we do not see useful examples for most of the epoch, and forgetting may occur.
-
- 
 How much does mini-batch replay hurt generalization?
-To answer the question we followed Shafai et al. approach trying different values of m, reaching the same results: dropoff in accuracy for small \textit{m}, while we see an inversion in pgd and test accuracy for high values of it. On CIFAR10 robustness can be reached with values of $m \leq 10$, our best results have been obtained with $m=8$.
- 
-Moreover it is known that adversarially trained classifiers, e.g. PGD,  have generative behaviors. When an image is perturbed from one class to another, it adopts features that make it “look” like its adopted class, to a human eye.
+To answer the question we followed \cite{ShafahiEtAl2019b} approach trying different values of m, reaching the same results: dropoff in accuracy for small \textit{m}, while we see an inversion in PGD and test accuracy for high values of it. On CIFAR10 robustness can be reached with values of $m \leq 10$, our best results have been obtained with $m = 8$.\\
+It is known that adversarially trained classifiers, e.g. PGD,  have generative behaviours. When an image is perturbed from one class to another, it adopts features that make it “look” like its adopted class, to a human eye.
 Free trained models exhibit this benefit and also smooth and flattened loss surface.
 Indeed, standard adversarially trainined classifiers show the property to have a flatten and smooth loss landscape while some defenses work by “masking” the gradients. This techniques makes it difficult to identify
 adversarial examples using gradient methods, even though adversarial examples remain present.
-Reference Engstrom et al. [2018] argues that gradient masking adds little security, free training does not operate by masking gradients and uses a rough loss surface.
+Reference \cite{EngstromEtAl2018} argues that gradient masking adds little security, free training does not operate by masking gradients and uses a rough loss surface.
+In the following table we present the results of our experiments conducted using Free method and varying the number of minibatch replays. We can notice that the train time increase as m increases as expected but in the case of $m=10$ we got values of accuracies lower than $m=8$.\\
+The following table shows the results of our experiments:
 
-In the following table we present the results of our experiments conducted using Free method and varying the number of minibatch replays. We can notice that the train time increase as m increases as expected but in the case of $m=10$ we got values of accuracies lower than $m=8$.
+\subsection{Experiments results}
+All experiments using Free adversarial training in this section are carried out with the same number of epochs, epsilon value $\epsilon = 8/255$. All PGD adversaries used at
+evaluation are run with 1 random restarts for 10,20,50 iterations (with the same hyperparameters as those
+used by Shafahi et al. (2019) but further strengthened with random restarts). Speedup with mixed-
+precision was incorporated with the Apex amp package at the O2 without loss scaling.
 \begin{table}[hbt!]
-\begin{tabular}{|c|l|l|l|l|l|l|l|}
+\begin{tabular}{|c|l|l|l|l|l|l|p{2cm}|}
 \hline
 \multicolumn{1}{|l|}{{ }}        & \multicolumn{4}{c|}{{ \textbf{Accuracy using PreActResNet18}}}                                                                                                                                                                            & \multicolumn{3}{l|}{{ }}                                                                                                                                                       \\ \hline
-{ \textbf{Minibatch-replay (m)}} & \multicolumn{1}{c|}{{ \textbf{Natural Images}}} & \multicolumn{1}{c|}{{ \textbf{PGD-10}}} & \multicolumn{1}{c|}{{ \textbf{PGD-20}}} & \multicolumn{1}{c|}{{ \textbf{PGD-50}}} & \multicolumn{1}{c|}{{ \textbf{Epoch}}} & \multicolumn{1}{c|}{{ \textbf{Train Time}}} & \multicolumn{1}{c|}{{ \textbf{Avg Epoch Time}}} \\ \hline
-{ \textit{m} = 2}                & { 0.895}                                        & { 0.324}                                & { 0.297}                                & { 0.290}                                & { 45}                                  & { 22 minutes}                               & { 29.4 seconds}                                 \\ \hline
-{ \textit{m} = 4}                & { 0.867}                                        & { 0.471}                                & { 0.457}                                & { 0.451}                                & { 45}                                  & { 44 minutes}                               & { 58.2 seconds}                                 \\ \hline
-{ \textit{m} = 8}                & { 0.839}                                        & { 0.498}                                & { 0.486}                                & { 0.483}                                & { 45}                                  & { 88 minutes}                               & { 117 seconds}                                  \\ \hline
-{ \textit{m} = 10}               & { 0.821}                                        & { 0.490}                                & { 0.482}                                & { 0.479}                                & { 45}                                  & { 108 minutes}                              & { 143.4 seconds}                                \\ \hline
+{ \textbf{Minibatch-replay (m)}} & \multicolumn{1}{p{1.5cm}|}{{ \textbf{Natural Images}}} & \multicolumn{1}{c|}{{ \textbf{PGD-10}}} & \multicolumn{1}{c|}{{ \textbf{PGD-20}}} & \multicolumn{1}{c|}{{ \textbf{PGD-50}}} & \multicolumn{1}{c|}{{ \textbf{Epoch}}} & \multicolumn{1}{p{1.5cm}|}{{ \textbf{Train Time (min)}}} & \multicolumn{1}{p{1.5cm}|}{{ \textbf{Avg Epoch Time (sec)}}} \\ \hline
+{ \textit{m} = 2}                & { 0.895}                                        & { 0.324}                                & { 0.297}                                & { 0.290}                                & { 45}                                  & { 22 }                               & { 29.4 }                                 \\ \hline
+{ \textit{m} = 4}                & { 0.867}                                        & { 0.471}                                & { 0.457}                                & { 0.451}                                & { 45}                                  & { 44 }                               & { 58.2 }                                 \\ \hline
+{ \textit{m} = 8}                & { 0.839}                                        & { 0.498}                                & { 0.486}                                & { 0.483}                                & { 45}                                  & { 88 }                               & { 117 }                                  \\ \hline
+{ \textit{m} = 10}               & { 0.821}                                        & { 0.490}                                & { 0.482}                                & { 0.479}                                & { 45}                                  & { 108 }                              & { 143.4 }                                \\ \hline
 \end{tabular}
 \end{table}
->>>>>>> Stashed changes
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FreePre/free2.png}
+    \caption{ Train and validation accuracies results.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FreePre/free5.png}
+    \caption{PGD validation accuracy}
+  \end{subfigure}
+  \caption{Free Adversarial training using PreActResnet18 (epsilon = 8/255, m = 8, batch size = 128,  epochs = 45)}
+  \label{fig:coffee}
+\end{figure}
+
+The following results are related to the training and evaluation based on ResNet50 model instead of PreActResnet18. The number of epochs has been increased to 90 to see the impact on the accuracy in the long run. 
+
+
+%Figure \ref{fig:boat1} shows a test and validation accuracy.
+
+
+\begin{table}[hbt!]
+\centering
+\begin{tabular}{|c|c|l|l|l|l|l|}
+\hline
+\multicolumn{1}{|l|}{}        & \multicolumn{2}{c|}{\textbf{Accuracy using ResNet50}}                               & \multicolumn{3}{l|}{\textbf{}}                                                                                                            & \textbf{}                                \\ \hline
+\textbf{Minibatch-replay (m)} & \textbf{Natural Images}                      & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{p{1.5cm}|}{\textbf{Train Time (min)}} & \multicolumn{1}{p{1.5cm}|}{\textbf{Avg Epoch Time (sec)}} & \multicolumn{1}{c|}{\textbf{Batch size}} \\ \hline
+m = 8       & \multicolumn{1}{l|}{0.735} & { 0.404}         & { 90}           & { 118}                     & { 78.6}                        & { 128}               \\ \hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FreeResnet/Figure_2.png}
+    \caption{ Train and validation accuracies results.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FreeResnet/Figure_5.png}
+    \caption{PGD validation accuracy}
+  \end{subfigure}
+  \caption{Free Adversarial training using ResNet50 (epsilon = 8/255, m = 8, batch size = 128,  epochs = 90)}
+  \label{fig:coffee}
+\end{figure}
+
 
 \section{Fast is better than free}
-\begin{center}
 
-<<<<<<< Updated upstream
+Wong et al. (2019) consider it possible to have shorter times than Shafai et al. (2019) “free” method using FGSM,  when Shafai et al. claim to spend 10 hours (200 epochs) to learn a robust CIFAR10 [??? non dal paper di free] , while standard training requires minutes. Similarly for Imagenet.  
+A key difference between FGSM and free adversarial training is that in the latter the perturbation from the previous minibatch is a reasonable starting point for the next minibatch, while FGSM can be used as it is just starting from a non-zero initial perturbation.
+So “Fast” adversarial training is just standard FGSM with random initialization for the perturbation and this is claimed to be as effective as PGD adversarial training.
+For this adversarial training one crucial parameter is the step size $\alpha$ that shows results on par with “Free” ones only choosing values in a particular interval. Indeed, two failure modes arise: 
+\begin{itemize}
+
+\item a step size too small ($\alpha$ =$\epsilon$) would mean a zero-initialized perturbation and lead to a too weak defense
+\item a step size too large ($\alpha$ = $2\epsilon$) will lead to a model overfitted, restricted to specific threats (“catastrophic overfitting”).
+\end{itemize}
+
+A good compromise is shown to be: $\alpha$ = 1.25, $\epsilon$ = 10/255.
+Another key difference is that FGSM does not need to repeat mini-batches but needs two backward passes to compute gradients separately from the perturbation and the model weights. From a computational complexity point of view this means that an epoch of FGSM is equivalent to two epochs of standard training.
+
 \begin{algorithm}[H]
 	\caption{FGSM adversarial training for T epochs}
 	\begin{algorithmic}[1]
@@ -181,27 +240,171 @@ In the following table we present the results of our experiments conducted using
 	\end{algorithmic}
 \end{algorithm}
 
-=======
+\subsection{Experiments results}
+
+All experiments using FGSM adversarial training in this section are carried out with the same number of epochs, epsilon value $\epsilon = 8/255$. All PGD adversaries used at
+evaluation are run with 1 random restarts for 10,20,50 iterations (with some of the same hyperparameters as those
+used by Wong et al. (2019) but further strengthened with random restarts). Speedup with mixed-precision was incorporated with the Apex amp package at the O2 without loss scaling.
+
+\begin{center}
 \begin{table}[hbt!]
 \begin{tabular}{|c|l|l|l|l|l|l|l|l|}
 \hline
 \multicolumn{1}{|l|}{{ }} & \multicolumn{4}{c|}{{ \textbf{Accuracy using PreActResNet18}}}                                                                                                                                                                            & \multicolumn{4}{l|}{{ }}                                                                                                                                                                                                                         \\ \hline
-{ \textbf{Step-size}}     & \multicolumn{1}{c|}{{ \textbf{Natural Images}}} & \multicolumn{1}{c|}{{ \textbf{PGD-10}}} & \multicolumn{1}{c|}{{ \textbf{PGD-20}}} & \multicolumn{1}{c|}{{ \textbf{PGD-50}}} & \multicolumn{1}{c|}{{ \textbf{Epoch}}} & \multicolumn{1}{c|}{{ \textbf{Train Time}}} & \multicolumn{1}{c|}{{ \textbf{Avg Epoch Time}}} & \multicolumn{1}{c|}{{ \textbf{Batch size}}} \\ \hline
-{ $\alpha = 10$}       & { 0.847}                                        & { 0.480}                                & { 0.463}                                & { 0.450}                                & { 45}                                  & { 21 minutes}                               & { 28.8  seconds}                                & { 128}                                      \\ \hline
-{ $\alpha = 10$}       & { 0.850}                                        & { 0.454}                                & { 0.438}                                & { 0.434}                                & { 45}                                  & { 20 minutes}                               & { 25.8 seconds}                                 & { 256}                                      \\ \hline
-{ $\alpha = 16$}       & { 0.856}                                        & { 0}                                    & { 0}                                    & { 0}                                    & { 45}                                  & { 21 minutes}                               & { 28.2 seconds}                                 & { 128}                                      \\ \hline
-{ $\alpha = 16$}       & { 0.87}                                         & { 0}                                    & { 0}                                    & { 0}                                    & { 45}                                  & { 20 minutes}                               & { 26.4 seconds}                                 & { 256}                                      \\ \hline
+{ \textbf{Step-size}}     & \multicolumn{1}{p{1.5cm}|}{{ \textbf{Natural Images}}} & \multicolumn{1}{c|}{{ \textbf{PGD-10}}} & \multicolumn{1}{c|}{{ \textbf{PGD-20}}} & \multicolumn{1}{c|}{{ \textbf{PGD-50}}} & \multicolumn{1}{c|}{{ \textbf{Epoch}}} & \multicolumn{1}{p{1.5cm}|}{{ \textbf{Train Time (min)}}} & \multicolumn{1}{p{1.5cm}|}{{ \textbf{Avg Epoch Time (sec)}}} & \multicolumn{1}{c|}{{ \textbf{Batch size}}} \\ \hline
+{ $\alpha = 10$}       & { 0.847}                                        & { 0.480}                                & { 0.463}                                & { 0.450}                                & { 45}                                  & { 21 }                               & { 28.8 }                                & { 128}                                      \\ \hline
+{ $\alpha = 10$}       & { 0.850}                                        & { 0.454}                                & { 0.438}                                & { 0.434}                                & { 45}                                  & { 20 }                               & { 25.8 }                                 & { 256}                                      \\ \hline
+{ $\alpha = 16$}       & { 0.856}                                        & { 0}                                    & { 0}                                    & { 0}                                    & { 45}                                  & { 21 }                               & { 28.2 }                                 & { 128}                                      \\ \hline
+{ $\alpha = 16$}       & { 0.87}                                         & { 0}                                    & { 0}                                    & { 0}                                    & { 45}                                  & { 20 }                               & { 26.4 }                                 & { 256}                                      \\ \hline
 \end{tabular}
 \end{table}
 \end{center}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FastPre/fast2.png}
+    \caption{ Train and validation accuracies results.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FastPre/fast5.png}
+    \caption{PGD validation accuracy}
+  \end{subfigure}
+  \caption{FGSM Adversarial training using Resnet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 45)}
+  \label{fig:coffee}
+\end{figure}
+
+
+The following results are related to the training and evaluation based on ResNet50 model instead of PreActResnet18. The number of epochs has been increased to 90 to see the impact on the accuracy in the long run. 
+
+\begin{table}[hbt!]
+\begin{tabular}{|c|c|l|l|l|l|l|}
+\hline
+\multicolumn{1}{|l|}{}    & \multicolumn{2}{c|}{\textbf{Accuracy using Resnet50}}                               & \multicolumn{4}{l|}{\textbf{}}                                                                                                                                                       \\ \hline
+\textbf{Step-size}        & \textbf{Natural Images}                      & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{c|}{\textbf{Train Time (min)}} & \multicolumn{1}{c|}{\textbf{Avg Epoch Time (sec)}} & \multicolumn{1}{c|}{\textbf{Batch size}} \\ \hline
+$\alpha$ = 10 & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}           & { 28.18}                   & { 18.78}                       & { 128}               \\ \hline
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FastResnet/Figure_2.png}
+    \caption{ Train and validation accuracies results.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/FastResnet/Figure_5.png}
+    \caption{PGD validation accuracy}
+  \end{subfigure}
+  \caption{FGSM Adversarial training using Resnet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 90)}
+  \label{fig:coffee}
+\end{figure}
+\newpage
+
+\section{Free vs Fast}
+In this section we compare the best results we obtained from the precedent experiments,
+then showing the evolution of validation accuracy in these two methods. 
+\\
+The following table contains the best m and batch size values for free method, obtained from the different free experiments compared with the best step size and batch size for FGSM. 
+\begin{table}[hbt!]
+\begin{tabular}{|l|p{2.1cm}|c|l|l|l|l|l|}
+\hline
+              & \multicolumn{1}{l|}{}         & \multicolumn{2}{c|}{\textbf{Accuracy using PreactResnet18}}                         & \multicolumn{3}{l|}{\textbf{}}                                                                                                            & \textbf{}                                \\ \hline
+ & \textbf{Minibatch-replays (m) / step size ($\alpha$)} & \textbf{Natural Images}                      & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{p{1cm}|}{\textbf{Train Time (min)}} & \multicolumn{1}{p{1cm}|}{\textbf{Avg Epoch Time (sec)}} & \multicolumn{1}{c|}{\textbf{Batch size}} \\ \hline
+\textbf{FREE} & m = 8 & \multicolumn{1}{l|}{0.845} & { 0.485}         & { 90}           & { 176}                     & { 117}                         & { 128}               \\ \hline
+\textbf{FAST} & $\alpha = 10/255$       & \multicolumn{1}{l|}{0.836} & { 0.434}         & { 90}           & { 43}                     & { 28}                         & { 128}               \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/preComp/Figure_1.png}
+    \caption{ Free vs Fast, Validation accuracies.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+<<<<<<< Updated upstream
+    \includegraphics[width=\linewidth]{images/preComp/Figure_2.png}
+    \caption{Free vs Fast, PGD validation accuracies.}
+=======
+    \includegraphics[width=\linewidth]{images/freeComp/Figure_2.png}
+    \caption{PGD validation accuracy}
 >>>>>>> Stashed changes
+  \end{subfigure}
+  \caption{Comparing results for Adversarial training using PreActResNet18 in Free vs Fast.}
+  \label{fig:coffee}
+\end{figure}
+
+\begin{table}[hbt!]
+\begin{tabular}{|l|p{2.1cm}|c|l|l|l|l|l|}
+\hline
+              & \multicolumn{1}{l|}{}         & \multicolumn{2}{c|}{\textbf{Accuracy using ResNet50}}                         & \multicolumn{3}{l|}{\textbf{}}                                                                                                            & \textbf{}                                \\ \hline
+ & \textbf{Minibatch-replays (m) / step size ($\alpha$)} & \textbf{Natural Images}                      & \multicolumn{1}{c|}{\textbf{PGD-50}} & \multicolumn{1}{c|}{\textbf{Epoch}} & \multicolumn{1}{p{1cm}|}{\textbf{Train Time (min)}} & \multicolumn{1}{p{1cm}|}{\textbf{Avg Epoch Time (sec)}} & \multicolumn{1}{c|}{\textbf{Batch size}} \\ \hline
+\textbf{FREE} & m = 8 & \multicolumn{1}{l|}{0.735} & { 0.404}         & { 90}           & { 176}                     & { 117}                         & { 128}               \\ \hline
+\textbf{FAST} & $\alpha = 10/255$       & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}           & { 29}                     & { 19}                         & { 128}               \\ \hline
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/resComp/Figure_1.png}
+    \caption{ Free vs Fast, Validation accuracies.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/resComp/Figure_2.png}
+    \caption{Free vs Fast, PGD validation accuracies.}
+  \end{subfigure}
+  \caption{Comparing results for Adversarial training using Resnet50 in Free vs Fast.}
+  \label{fig:coffee}
+\end{figure}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/freeComp/Figure_1.png}
+    \caption{ Validation accuracies.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/freeComp/Figure_2.png}
+    \caption{PGD validation accuracies.}
+  \end{subfigure}
+  \caption{Free Adversarial training (epsilon = 8/255, m = 8, batch size = 128,  epochs = 90)}
+  \label{fig:coffee}
+\end{figure}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/fastComp/Figure_1.png}
+    \caption{ Validation accuracies.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/fastComp/Figure_2.png}
+    \caption{PGD validation accuracies.}
+  \end{subfigure}
+  \caption{Fast Adversarial training using ResNet50 (epsilon = 8/255, $\alpha$ = 10/255, batch size = 128,  epochs = 90)}
+  \label{fig:coffee}
+\end{figure}
+
+
+The following charts offer the possibility to compare the evolution of test and PGD accuracies over the epochs.
+
 \section{Conclusions}
+Wong et al.'s paper about was useful to reconsider FGSM as a feasible method for adversarial training once step size parameter is tuned correctly, and how simple optimization operations on learning rate adaptation (Cyclic Learning Rate) or based on hardware compatibility with mixed precision computation (Mixed-precision arithmetic) can decrease computation time, with small effort.
+FGSM shows results similar to the ones obtained from the "Free" method, considering the same number of epochs, but the total training time suggests FGSM as a faster and better method to speed up adversarial training compared to free, based on our experiments on CIFAR10.   
+
+
 
 \begin{thebibliography}{100} 
 	\bibitem{TsiprasEtAl} {Dimitris Tsipras, Shibani Santurkar, Logan Engstrom, Alexander Turner, and Aleksander Madry. Robustness may be at odds with accuracy. ICLR, 1050:11, 2018}
 
 	\bibitem{ZhangEtAl2019a} {Hongyang Zhang, Yaodong Yu, Jiantao Jiao, Eric P Xing, Laurent El Ghaoui, and Michael I Jordan. Theoretically principled trade-off between robustness and accuracy. ICML, 2019a.}
-	
 	\bibitem{ShafahiEtAl2019a} {Ali Shafahi, W Ronny Huang, Christoph Studer, Soheil Feizi, and Tom Goldstein. Are adversarial examples inevitable? ICLR, 2019a.}
 	
 	\bibitem{ShafahiEtAl2019b} {Ali Shafahi, Mahyar Najibi, Amin Ghiasi, Zheng Xu, John Dickerson, Christoph Studer, Larry S
@@ -216,6 +419,8 @@ In the following table we present the results of our experiments conducted using
 	\bibitem{GoodfellowEtAl2014} {Ian J Goodfellow, Jonathon Shlens, and Christian Szegedy. Explaining and harnessing adversarial examples. arXiv preprint arXiv:1412.6572, 2014.}
 	
 	\bibitem{MadryEtAl2017} {Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipras, and Adrian Vladu. Towards deep learning models resistant to adversarial attacks. ICLR, 2017.}
+	
+	\bibitem{EngstromEtAl2018} {Logan Engstrom, Andrew Ilyas, and Anish Athalye. Evaluating and understanding the robustness of adversarial logit pairing. arXiv preprint arXiv:1807.10272, 2018.}
 	
 \end{thebibliography}
 	
