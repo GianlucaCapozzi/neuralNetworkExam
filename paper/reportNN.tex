@@ -16,7 +16,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
-\usepackage[noend]{algpseudocode}
+\usepackage{algpseudocode}
 \graphicspath{ {./images/} }
 \usepackage{fixmath}
 \usepackage{graphicx}
@@ -321,14 +321,14 @@ The following table contains the best m and batch size values for free method, o
 \begin{figure}[hbt!]
   \centering
   \begin{subfigure}[b]{0.4\linewidth}
-    \includegraphics[width=\linewidth]{images/freeComp/Figure_1.png}
-    \caption{ Train and validation accuracies results.}
+    \includegraphics[width=\linewidth]{images/preComp/Figure_1.png}
+    \caption{ Free vs Fast, Validation accuracies.}
   \end{subfigure}
   \begin{subfigure}[b]{0.4\linewidth}
-    \includegraphics[width=\linewidth]{images/freeComp/Figure_2.png}
-    \caption{PGD validation accuracy}
+    \includegraphics[width=\linewidth]{images/preComp/Figure_2.png}
+    \caption{Free vs Fast, PGD validation accuracies.}
   \end{subfigure}
-  \caption{Free Adversarial training using ResNet50 (epsilon = 8/255, m = 8, batch size = 128,  epochs = 90)}
+  \caption{Comparing results for Adversarial training using PreActResNet18 in Free vs Fast.}
   \label{fig:coffee}
 \end{figure}
 
@@ -341,6 +341,52 @@ The following table contains the best m and batch size values for free method, o
 \textbf{FAST} & $\alpha = 10/255$       & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}           & { 29}                     & { 19}                         & { 128}               \\ \hline
 \end{tabular}
 \end{table}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/resComp/Figure_1.png}
+    \caption{ Free vs Fast, Validation accuracies.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/resComp/Figure_2.png}
+    \caption{Free vs Fast, PGD validation accuracies.}
+  \end{subfigure}
+  \caption{Comparing results for Adversarial training using Resnet50 in Free vs Fast.}
+  \label{fig:coffee}
+\end{figure}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/freeComp/Figure_1.png}
+    \caption{ Validation accuracies.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/freeComp/Figure_2.png}
+    \caption{PGD validation accuracies.}
+  \end{subfigure}
+  \caption{Free Adversarial training (epsilon = 8/255, m = 8, batch size = 128,  epochs = 90)}
+  \label{fig:coffee}
+\end{figure}
+
+
+\begin{figure}[hbt!]
+  \centering
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/fastComp/Figure_1.png}
+    \caption{ Validation accuracies.}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.4\linewidth}
+    \includegraphics[width=\linewidth]{images/fastComp/Figure_2.png}
+    \caption{PGD validation accuracies.}
+  \end{subfigure}
+  \caption{Fast Adversarial training using ResNet50 (epsilon = 8/255, $\alpha$ = 10/255, batch size = 128,  epochs = 90)}
+  \label{fig:coffee}
+\end{figure}
+
 
 The following charts offer the possibility to compare the evolution of test and PGD accuracies over the epochs.
 
