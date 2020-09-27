@@ -52,18 +52,18 @@ The goal of adversarial training is to learn a model which is not only accurate 
 This leads to particular attention at the results we obtained after adversarial training experiments, aware of the presence of an acceptable compromise in accuracy, given a large increase in robustness due to the tradeoff between robustness and generalization \cite{TsiprasEtAl, ZhangEtAl2019a, ShafahiEtAl2019a}.
 
 \subsection{Related Works}
-Our work is based on “Adversarial training for free!” paper \cite{ShafahiEtAl2019b}, that presented an algorithm able to eliminate the overhead cost of generating adversarial examples by recycling the gradient information computed when updating the model parameters. While researching related work in the field we discovered a more recent paper, called "Fast is better than free: Revisiting adversarial training" \cite{WongEtAl2020} presenting an already known method called FGSM, previously considered ineffective due to what the paper calls “catastrophic overfitting”. This failure condition is preventable with the use of random initialization points. Moreover the same paper reported a further acceleration in training even for free algorithm thanks to standard techniques for efficient training, including cyclic learning rate and mixed-precision arithmetic.
-This caught our interest and we decided to try to replicate the reported results and compare them with our implementation, in order to confirm or deny these thesis.
+Our work is based on “Adversarial training for free!” paper \cite{ShafahiEtAl2019b}, that presented an algorithm able to eliminate the overhead cost of generating adversarial examples by recycling the gradient information computed when updating the model parameters. While researching related work in the field we discovered a more recent paper, called "Fast is better than free: Revisiting adversarial training" \cite{WongEtAl2020} presenting an improvement of an already known method called FGSM, previously considered ineffective due to what the paper calls “catastrophic overfitting”. This failure condition is preventable with the use of random initialization points. Moreover the same paper reported a further acceleration in training even for the Free algorithm, thanks to standard techniques for efficient training, including cyclic learning rate and mixed-precision arithmetic. This caught our interest and we decided to try to replicate the reported results and compare them with our implementation, in order to confirm or deny these thesis.
 
 \subsection{Dataset and architecture}
 
-We decided to choose CIFAR-10 as the dataset on which our experiments would have been conducted to adapt to the available hardware (our GPU is an Nvidia RTX 2070 super). The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class.\\
+We decided to choose CIFAR-10 as the dataset on which our experiments have been conducted. All of them are run on a single NVIDIA RTX 2070-Super GPU.\\
+The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class.\\
 We conducted adversarial training examples using as models ResNet50 and PreActResNet18. 
 Both ResNet50 and PreActResnet18 results have been reported and compared between them, under the same conditions. 
 
 
 \section{Adversarial Machine Learning}
-Adversarial machine learning is a machine learning technique that attempts to fool models by supplying deceptive input (called also adversarial example). Adversarial examples exploit the way artificial intelligence algorithms work to disrupt the behavior of artificial intelligence algorithms. In the past few years, adversarial machine learning has become an active area of research as the role of AI continues to grow in many of the applications we use. There’s growing concern that vulnerabilities in machine learning systems can be exploited for malicious purposes. The main idea to deal with adversarial examples is represented by adversarial training; it can be traced back to \cite{GoodfellowEtAl2015}, in which models were hardened by producing adversarial examples and injecting them into training data \cite{ShafahiEtAl2019b}.\\
+Adversarial machine learning is a machine learning technique that attempts to fool models by supplying deceptive input (called also adversarial example). Adversarial examples exploit the way artificial intelligence algorithms work to disrupt the behavior of such algorithms. In the past few years, adversarial machine learning has become an active area of research as the role of AI continues to grow in many of the applications we use. There’s growing concern that vulnerabilities in machine learning systems can be exploited for malicious purposes. The main idea to dealt with adversarial examples is represented by adversarial training; it can be traced back to \cite{GoodfellowEtAl2015}, in which models were hardened by producing adversarial examples and injecting them into training data \cite{ShafahiEtAl2019b}.\\
 This technique can be summarized as follows: given a network $f_{\theta}$ parametrized by $\theta$, a dataset ($x_i$, $y_i$), a loss function $l$ and a threat model $\Delta$, the learning problem consists in the following optimization problem:
 \begin{center}
 	$min_{\theta}{\sum_{i}l(f_{\theta}(x_i + \delta), y_i)}$
@@ -71,9 +71,9 @@ This technique can be summarized as follows: given a network $f_{\theta}$ parame
 A typical choice for the adversarial model is to take $\Delta = \{\delta : ||\delta||_{\infty} \le \epsilon\}$ for some $\epsilon > 0$.
 
 \section{PGD attack}
-The PGD attack is a white-box attack, which means that the attacker has access to the model's weights, giving to the attacker much more power than a black-box attack (in which the model's weights are not known) as he can specifically craft the attack to fool the chosen model without having to rely on transfer attacks, which often result in human-visible perturbations.
-The key to understanding the PGD attack is to frame finding an adversarial example as a contrained optimisation problem. PGD attempts to find the perturbation that maximises the loss of a model on a particular input while keeping the size of the perturbation smaller than a specified amount referred to as epsilon. This constraint is usually expressed as the $l^2$ or $l^{\infty}$ norm of the perturbation and it is added so the content of the adversarial example is the same as the unperturbed sample.
-The PGD algorithm can be summarised with the 4 steps below although the attacker is free to apply any optimisation improvements such as momentum, Adam, multiple restarts etc...
+The PGD attack is a white-box attack, which means that the attacker has access to the model's weights, giving to the attacker much more power than a black-box attack (in which the model's weights are not known), as he can specifically craft the attack to fool the chosen model without having to rely on transfer attacks, which often result in human-visible perturbations.
+The key to understanding the PGD attack is to frame finding an adversarial example as a contrained optimisation problem. PGD attempts to find the perturbation that maximises the loss of a model on a particular input while keeping the size of the perturbation smaller than a specified amount referred to as epsilon. This constraint is usually expressed as the $l_2$ or $l_{\infty}$ norm of the perturbation and it is added so the content of the adversarial example is the same as the unperturbed sample.
+The PGD algorithm can be summarised with the 4 steps below (although the attacker is free to apply any optimisation improvements such as momentum, Adam, multiple restarts, etc...):
 \begin{enumerate}
 	\item Start from a random perturbation in the $l_p$ ball around a sample;
 	\item Take a gradient step in the direction of the greatest loss;
@@ -134,19 +134,17 @@ The pseudocode of Free is shown in Algorithm 2.
 In the choice of m one problem may arise:
 it's possible that catastrophic forgetting happens, e.g. when all the “informative” images of one class are in the first few mini-batches. In this extreme case, we do not see useful examples for most of the epoch, and forgetting may occur.
 How much does mini-batch replay hurt generalization?
-To answer the question we followed \cite{ShafahiEtAl2019b} approach trying different values of m, reaching the same results: dropoff in accuracy for small \textit{m}, while we see an inversion in PGD and test accuracy for high values of it. On CIFAR-10 effective robustness can be reached with values of $m \leq 10$, our best results have been obtained with $m = 8$.\\
-It is known that adversarially trained classifiers, e.g. PGD,  have generative behaviours. When an image is perturbed from one class to another, it adopts features that make it “look” like its adopted class, to a human eye.
+To answer the question we followed \cite{ShafahiEtAl2019b} approach trying different values of \textit{m}, reaching the same results: dropoff in accuracy for small \textit{m}, while we see an inversion in PGD and test accuracy for high values of it. On CIFAR-10, robustness can be reached with values of $m \leq 10$; our best results have been obtained with $m = 8$.\\
+It is known that adversarially trained classifiers, e.g. classifiers trained against PGD,  have generative behaviours. When an image is perturbed from one class to another, it adopts features that make it “look” like its adopted class, to a human eye.
 Free trained models exhibit this benefit and also smooth and flattened loss surface.
 Indeed, standard adversarially trainined classifiers show the property to have a flatten and smooth loss landscape while some defenses work by “masking” the gradients. This techniques makes it difficult to identify
 adversarial examples using gradient methods, even though adversarial examples remain present.
 Reference \cite{EngstromEtAl2018} argues that gradient masking adds little security, free training does not operate by masking gradients and uses a rough loss surface.
-In the following table we present the results of our experiments conducted using Free method and varying the number of minibatch replays. We can notice that the train time increase as m increases as expected but in the case of $m=10$ we see a small inversion in the value of both natural image accuracy and robustness.\\
+
 \subsection{Experiments results}
-All experiments using Free adversarial training in this section are carried out with the same number of epochs, epsilon value $\epsilon = 8/255$. All PGD adversaries used at
-evaluation are run with 1 random restarts for 10,20,50 iterations (with the same hyperparameters as those
-used by Shafahi et al. (2019) \cite{ShafahiEtAl2019b} but further strengthened with random restarts). Speedup with mixed-
-precision was incorporated with the Apex amp package at the O2 without loss scaling.\\
-The following table shows the results of our experiments:
+In this section, we present the results of our experiments conducted using Free method and varying the number of minibatch replays. We can notice that the train time increase as \textit{m} increases as expected but in the case of $m=10$ we got values of accuracies lower than $m=8$.\\
+All experiments using Free adversarial training in this section are carried out with the same number of epochs and epsilon value $\epsilon = 8/255$. We are interested evaluating the accuracy of the model against the natural images and the accuracy against images perturbed using the PGD attack. In particular, we run PGD using three different values for the number \textit{K} of iterations, which are {10, 20, 50}. The number of random restarts used for PGD is 1; all the other hyper-parameters are the same used by [Shafahi et al.] in \cite{ShafahiEtAl2019b}. The implementation of Free provided by [Wong et al.] in \cite{WongEtAl2020} includes also the optimization of cyclic learning rate and mixed-precision.\\
+The following table shows the results when the used model is PreactResNet18:
 \begin{table}[hbt!]
 \begin{tabular}{|c|l|l|l|l|l|l|p{2cm}|}
 \hline
@@ -209,18 +207,18 @@ m = 8       & \multicolumn{1}{l|}{0.735} & { 0.404}         & { 90}           & 
 
 \section{Fast is better than free}
 
-Wong et al. (2020) \cite{WongEtAl2020} claim to spend shorter computational time than Shafai et al. (2019) \cite {ShafahiEtAl2019b} “Free” method using FGSM,  with time very distant from 10 hours (200 epochs) to learn a robust CIFAR-10 \cite{WongEtAl2020}, while standard training requires minutes. Similarly for Imagenet.  
-A key difference between FGSM and free adversarial training is that in the latter the perturbation from the previous minibatch is a reasonable starting point for the next minibatch, while FGSM can be used as it is just starting from a non-zero initial perturbation.
-So “Fast” adversarial training is just standard FGSM with random initialization for the perturbation and this is claimed to be as effective as PGD adversarial training \cite{WongEtAl2020}.
-For this adversarial training one crucial parameter is the step size $\alpha$ that shows results on par with “Free” ones only choosing values in a particular interval. Indeed, two failure modes arise: 
+[Wong et al.] in \cite{WongEtAl2020} consider it possible to have shorter adversarial training times than the Free method proposed by [Shafai et al.] in \cite{ShafahiEtAl2019b} using a modified version of the simple FGSM method, called Fast; if we compare the data from the two original papers [Shafahi et al.] \cite{ShafahiEtAl2019b} and [Wong et al.] \cite{WongEtAl2020}, we can see that the Free method requires 785 minutes for achieving a good robustness on CIFAR-10 against PGD while the Fast method, in order to achieve the same robustness, requires 12.17 minutes. Similar results about the speed-up in adversarial training time can been observed if the chosen dataset is Imagenet.\\
+A key difference between Fast/FGSM and Free adversarial training, is that in the latter the perturbation from the previous minibatch is a reasonable starting point for the next minibatch, while FGSM can be used as it is, just starting from a non-zero initial perturbation.\\
+So, “Fast” adversarial training is just standard FGSM with random non-zero initialization for the perturbation and this is claimed to be as effective as PGD adversarial training. This idea of non-zero random initial perturbation was already introduced by [Tramèr et al.] in \cite{TramerEtAl2017} but, the key difference between this implementation and Fast is that, the first one uses a more restricted random initialization and step size, which doesn't give a robust model against PGD attack.  So, for this adversarial training, one crucial parameter is the step size $\alpha$ that shows results on par with “Free” ones only choosing values in a particular interval. Indeed, two failure modes arise:
+
 \begin{itemize}
 
 \item a step size too small ($\alpha$ =$\epsilon$) would mean a zero-initialized perturbation and lead to a too weak defense
 \item a step size too large ($\alpha$ = $2\epsilon$) will lead to a model overfitted, restricted to specific threats (“catastrophic overfitting”).
 \end{itemize}
 
-A good compromise is shown to be: $\alpha$ = 1.25, $\epsilon$ = 10/255.
-Another key difference is that FGSM does not need to repeat mini-batches but needs two backward passes to compute gradients separately from the perturbation and the model weights. From a computational complexity point of view this means that an epoch of FGSM is equivalent to two epochs of standard training.
+A good compromise for these parameters is shown to be: $\alpha$ = 1.25, $\epsilon$ = 10/255.\\
+Another key difference is that FGSM does not need to repeat mini-batches, but needs two backward passes to compute gradients separately from the perturbation and the model weights. From a computational complexity point of view this means that an epoch of FGSM is equivalent to two epochs of standard training.
 
 \begin{algorithm}[H]
 	\caption{FGSM adversarial training for T epochs}
@@ -425,6 +423,10 @@ FGSM shows results similar to the ones obtained from the "Free" method, consider
 	\bibitem{MadryEtAl2017} {Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipras, and Adrian Vladu. Towards deep learning models resistant to adversarial attacks. ICLR, 2017.}
 	
 	\bibitem{EngstromEtAl2018} {Logan Engstrom, Andrew Ilyas, and Anish Athalye. Evaluating and understanding the robustness of adversarial logit pairing. arXiv preprint arXiv:1807.10272, 2018.}
+	
+	\bibitem{TramerEtAl2017} {Florian Tramèr, Alexey Kurakin, Nicolas Papernot, Ian Goodfellow, Dan Boneh, and Patrick Mc-
+		Daniel. Ensemble adversarial training: Attacks and defenses. arXiv preprint arXiv:1705.07204,
+		2017.}
 	
 \end{thebibliography}
 	
