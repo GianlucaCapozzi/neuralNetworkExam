@@ -209,9 +209,9 @@ m = 8       & \multicolumn{1}{l|}{0.735} & { 0.404}         & { 90}           & 
 
 \section{Fast is better than free}
 
-Wong et al. (2020) \cite{WongEtAl2020} consider it possible to have shorter times than Shafai et al. (2019) “free” method using FGSM,  when Shafai et al. claim to spend 10 hours (200 epochs) to learn a robust CIFAR10 [??? non dal paper di free] , while standard training requires minutes. Similarly for Imagenet.  
+Wong et al. (2020) \cite{WongEtAl2020} claim to spend shorter computational time than Shafai et al. (2019) \cite {ShafahiEtAl2019b} “Free” method using FGSM,  with time very distant from 10 hours (200 epochs) to learn a robust CIFAR-10 \cite{WongEtAl2020}, while standard training requires minutes. Similarly for Imagenet.  
 A key difference between FGSM and free adversarial training is that in the latter the perturbation from the previous minibatch is a reasonable starting point for the next minibatch, while FGSM can be used as it is just starting from a non-zero initial perturbation.
-So “Fast” adversarial training is just standard FGSM with random initialization for the perturbation and this is claimed to be as effective as PGD adversarial training.
+So “Fast” adversarial training is just standard FGSM with random initialization for the perturbation and this is claimed to be as effective as PGD adversarial training \cite{WongEtAl2020}.
 For this adversarial training one crucial parameter is the step size $\alpha$ that shows results on par with “Free” ones only choosing values in a particular interval. Indeed, two failure modes arise: 
 \begin{itemize}
 
@@ -400,8 +400,8 @@ In the following two charts we compare the evolution of Free adv.learning using 
 
 \newpage
 \section{Conclusions}
-Wong et al.'s paper about was useful to reconsider FGSM as a feasible method for adversarial training once step size parameter is tuned correctly, and how simple optimization operations on learning rate adaptation (Cyclic Learning Rate) or based on hardware compatibility with mixed precision computation (Mixed-precision arithmetic) can decrease computation time, with small effort.
-FGSM shows results similar to the ones obtained from the "Free" method, considering the same number of epochs, but the total training time suggests FGSM as a faster and better method to speed up adversarial training compared to free, based on our experiments on CIFAR10.   
+Wong et al.'s paper \cite{WongEtAl2020} was useful to reconsider FGSM as a feasible method for adversarial training once step size parameter is tuned correctly, and how simple optimization operations on learning rate adaptation (Cyclic Learning Rate) or based on hardware compatibility with mixed precision computation (Mixed-precision arithmetic) can decrease computation time, with small effort.
+FGSM shows results similar to the ones obtained from the "Free" method, considering the same number of epochs, but the total training time suggests FGSM as a faster and better method to speed up adversarial training compared to free, based on our experiments on CIFAR-10.   
 
 
 
