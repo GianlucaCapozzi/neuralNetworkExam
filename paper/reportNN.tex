@@ -524,10 +524,12 @@ $\alpha$ = 10/255 & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}
 
 
 \section{Final Experiments}
+In order to ease the training and the experiments using different parameters we also developed a single python script that load user preferences (hyperparameters and general parameters) from an editable config file. In "configs.ini" file the user can choose among three different modalities (sequential running of free adv. training and then fgsm, only free adv. training or only fast) and change hyperparameters  (batch size, epsilon, etc...) along with common parameters (name of the model, output filename, etc...).
+
 \subsection{Free vs Fast using PreActResnet18}
 In this section we compare the best results we obtained from the precedent
 experiments, then showing the evolution of validation accuracy in these two
-methods. \\
+methods using Resnet50 as model. \\
 The following table contains the best \textit{m} and batch size values for free method,
 obtained from the different free experiments compared with the best step size
 and batch size for FGSM. 
@@ -567,7 +569,12 @@ and batch size for FGSM.
 \end{figure}
 
 \subsection{Free vs Fast using ResNet50}
-
+In this section we compare the best results we obtained from the precedent
+experiments, then showing the evolution of validation accuracy in these two
+methods when using Resnet50 as model. \\
+The following table contains the best \textit{m} and batch size values for free method,
+obtained from the different free experiments compared with the best step size
+and batch size for FGSM. 
 
 \begin{table}[hbt!]
 \begin{tabular}{|l|p{2.1cm}|c|l|l|l|l|l|}
@@ -609,7 +616,7 @@ and batch size for FGSM.
 
 \subsection{PreAct18 vs ResNet50}
 In the following two charts we compare the evolution of Free adv. learning using
-the two different models ResNet50 and PreActResnet18.
+the two different models ResNet50 and PreActResnet18. 
 
 
 
@@ -656,7 +663,7 @@ computation (Mixed-precision arithmetic) can decrease computation time, with
 small efforts. FGSM shows results similar to the ones obtained from the "Free"
 method, considering the same number of epochs, but the total training time
 suggests FGSM as a faster and better method to speed up adversarial training
-compared to free, based on our experiments on CIFAR-10.   
+compared to free, moreover PreActResnet18 showed better results than Resnet50 for all the considered epochs, based on our experiments on CIFAR-10.   
 
 
 

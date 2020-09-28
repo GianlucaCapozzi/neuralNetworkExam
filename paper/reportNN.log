@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.9.23)  28 SEP 2020 15:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2020.9.23)  28 SEP 2020 15:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1114,82 +1114,82 @@ Package pdftex.def Info: images/FastResnet/Figure_5.png  used on input line 517
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
  [7 <./images/FastPre/fast2.png> <./images/FastPre/fast5.png> <./images/FastRes
 net/Figure_2.png> <./images/FastResnet/Figure_5.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 541--541
+Underfull \hbox (badness 10000) in paragraph at lines 543--543
 []\T1/ptm/b/n/10 Minibatch-
  []
 
 
-Underfull \hbox (badness 1067) in paragraph at lines 541--541
+Underfull \hbox (badness 1067) in paragraph at lines 543--543
 \T1/ptm/b/n/10 replays (m) /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 544--544
+Underfull \hbox (badness 10000) in paragraph at lines 546--546
 []\T1/ptm/b/n/10 Train
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 544--544
+Underfull \hbox (badness 10000) in paragraph at lines 546--546
 \T1/ptm/b/n/10 Time
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 544--544
+Underfull \hbox (badness 10000) in paragraph at lines 546--546
 []\T1/ptm/b/n/10 Avg
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 544--544
+Underfull \hbox (badness 10000) in paragraph at lines 546--546
 \T1/ptm/b/n/10 Epoch
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 544--544
+Underfull \hbox (badness 10000) in paragraph at lines 546--546
 \T1/ptm/b/n/10 Time
  []
 
 <images/preComp/Figure_1.png, id=174, 462.528pt x 346.896pt>
 File: images/preComp/Figure_1.png Graphic file (type png)
 <use images/preComp/Figure_1.png>
-Package pdftex.def Info: images/preComp/Figure_1.png  used on input line 558.
+Package pdftex.def Info: images/preComp/Figure_1.png  used on input line 560.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
 <images/preComp/Figure_2.png, id=175, 462.528pt x 346.896pt>
 File: images/preComp/Figure_2.png Graphic file (type png)
 <use images/preComp/Figure_2.png>
-Package pdftex.def Info: images/preComp/Figure_2.png  used on input line 562.
+Package pdftex.def Info: images/preComp/Figure_2.png  used on input line 564.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 579--579
+Underfull \hbox (badness 10000) in paragraph at lines 586--586
 []\T1/ptm/b/n/10 Minibatch-
  []
 
 
-Underfull \hbox (badness 1067) in paragraph at lines 579--579
+Underfull \hbox (badness 1067) in paragraph at lines 586--586
 \T1/ptm/b/n/10 replays (m) /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 582--582
+Underfull \hbox (badness 10000) in paragraph at lines 589--589
 []\T1/ptm/b/n/10 Train
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 582--582
+Underfull \hbox (badness 10000) in paragraph at lines 589--589
 \T1/ptm/b/n/10 Time
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 582--582
+Underfull \hbox (badness 10000) in paragraph at lines 589--589
 []\T1/ptm/b/n/10 Avg
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 582--582
+Underfull \hbox (badness 10000) in paragraph at lines 589--589
 \T1/ptm/b/n/10 Epoch
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 582--582
+Underfull \hbox (badness 10000) in paragraph at lines 589--589
 \T1/ptm/b/n/10 Time
  []
 
@@ -1197,49 +1197,49 @@ Underfull \hbox (badness 10000) in paragraph at lines 582--582
 <images/resComp/Figure_1.png, id=185, 462.528pt x 346.896pt>
 File: images/resComp/Figure_1.png Graphic file (type png)
 <use images/resComp/Figure_1.png>
-Package pdftex.def Info: images/resComp/Figure_1.png  used on input line 599.
+Package pdftex.def Info: images/resComp/Figure_1.png  used on input line 606.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
 <images/resComp/Figure_2.png, id=186, 462.528pt x 346.896pt>
 File: images/resComp/Figure_2.png Graphic file (type png)
 <use images/resComp/Figure_2.png>
-Package pdftex.def Info: images/resComp/Figure_2.png  used on input line 603.
+Package pdftex.def Info: images/resComp/Figure_2.png  used on input line 610.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
 <images/freeComp/Figure_1.png, id=187, 462.528pt x 346.896pt>
 File: images/freeComp/Figure_1.png Graphic file (type png)
 <use images/freeComp/Figure_1.png>
-Package pdftex.def Info: images/freeComp/Figure_1.png  used on input line 619.
+Package pdftex.def Info: images/freeComp/Figure_1.png  used on input line 626.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
 <images/freeComp/Figure_2.png, id=188, 462.528pt x 346.896pt>
 File: images/freeComp/Figure_2.png Graphic file (type png)
 <use images/freeComp/Figure_2.png>
-Package pdftex.def Info: images/freeComp/Figure_2.png  used on input line 623.
+Package pdftex.def Info: images/freeComp/Figure_2.png  used on input line 630.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
 <images/fastComp/Figure_1.png, id=189, 462.528pt x 346.896pt>
 File: images/fastComp/Figure_1.png Graphic file (type png)
 <use images/fastComp/Figure_1.png>
-Package pdftex.def Info: images/fastComp/Figure_1.png  used on input line 634.
+Package pdftex.def Info: images/fastComp/Figure_1.png  used on input line 641.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
 <images/fastComp/Figure_2.png, id=190, 462.528pt x 346.896pt>
 File: images/fastComp/Figure_2.png Graphic file (type png)
 <use images/fastComp/Figure_2.png>
-Package pdftex.def Info: images/fastComp/Figure_2.png  used on input line 638.
+Package pdftex.def Info: images/fastComp/Figure_2.png  used on input line 645.
 (pdftex.def)             Requested size: 187.89912pt x 140.92615pt.
  [9 <./images/resComp/Figure_1.png> <./images/resComp/Figure_2.png> <./images/f
 reeComp/Figure_1.png> <./images/freeComp/Figure_2.png> <./images/fastComp/Figur
 e_1.png> <./images/fastComp/Figure_2.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 692.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 699.
  [10]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 692.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 699.
  (./reportNN.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 692.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 692.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 699.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 699.
 Package rerunfilecheck Info: File `reportNN.out' has not changed.
 (rerunfilecheck)             Checksum: 380AC66BFD66BB22BF7F6E3AD33C194E;943.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 692.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 699.
  ) 
 Here is how much of TeX's memory you used:
  10925 strings out of 494805
@@ -1248,7 +1248,7 @@ Here is how much of TeX's memory you used:
  13859 multiletter control sequences out of 15000+600000
  51000 words of font info for 145 fonts, out of 8000000 for 9000
  81 hyphenation exceptions out of 8191
- 42i,11n,45p,366b,444s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,11n,45p,533b,444s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc} </home/giuppo/.te
 xlive2017/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk></usr/share/texl
 ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/te
@@ -1261,7 +1261,7 @@ ts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symb
 ols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on reportNN.pdf (10 pages, 645612 bytes).
+Output written on reportNN.pdf (10 pages, 646222 bytes).
 PDF statistics:
  302 PDF objects out of 1000 (max. 8388607)
  208 compressed objects within 3 object streams
