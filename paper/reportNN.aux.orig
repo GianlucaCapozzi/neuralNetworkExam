@@ -23,26 +23,18 @@
 \citation{WongEtAl2020}
 \citation{GoodfellowEtAl2015}
 \citation{ShafahiEtAl2019b}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Related Works}{1}{subsection.1.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Dataset and architecture}{1}{subsection.1.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Related Works}{1}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Dataset and architecture}{1}{subsection.1.2}\protected@file@percent }
 \citation{GoodfellowEtAl2014}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Adversarial Machine Learning}{2}{section.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}PGD attack}{2}{section.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Adversarial Machine Learning}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}PGD attack}{2}{section.3}\protected@file@percent }
 \citation{MadryEtAl2017}
 \citation{ShafahiEtAl2019b}
 \citation{WongEtAl2020}
 \citation{ShafahiEtAl2019b}
 \citation{ShafahiEtAl2019b}
 \citation{EngstromEtAl2018}
-<<<<<<< Updated upstream
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces PGD adversarial training for T epochs, given some radius $\epsilon $, adversarial step size $\alpha $ and $K$ PGD steps and a a dataset of size $M$ for a network $f_{\theta }$\relax }}{3}{algorithm.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Free Adversarial training for free!}{3}{section.4}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces "Free" Adversarial Training (Free-m)\relax }}{3}{algorithm.2}}
-\citation{ShafahiEtAl2019b}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experiments results}{4}{subsection.4.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Free Adversarial training using PreActResnet18 (epsilon = 8/255, m = 8, batch size = 128, epochs = 45)\relax }}{4}{figure.caption.2}}
-=======
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces PGD adversarial training for T epochs, given some radius $\epsilon $, adversarial step size $\alpha $ and $K$ PGD steps and a a dataset of size $M$ for a network $f_{\theta }$\relax }}{3}{algorithm.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4}Free Adversarial training for free!}{3}{section.4}\protected@file@percent }
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces "Free" Adversarial Training (Free-m)\relax }}{3}{algorithm.2}\protected@file@percent }
@@ -50,27 +42,10 @@
 \citation{WongEtAl2020}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experiments results}{4}{subsection.4.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Free Adversarial training using PreActResnet18 (epsilon = 8/255, m = 8, batch size = 128, epochs = 45)\relax }}{4}{figure.caption.2}\protected@file@percent }
->>>>>>> Stashed changes
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:coffee}{{1}{4}{Free Adversarial training using PreActResnet18 (epsilon = 8/255, m = 8, batch size = 128, epochs = 45)\relax }{figure.caption.2}{}}
 \citation{WongEtAl2020}
 \citation{ShafahiEtAl2019b}
-<<<<<<< Updated upstream
-\citation{WongEtAl2020}
-\citation{WongEtAl2020}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Free Adversarial training using ResNet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 90)\relax }}{5}{figure.caption.4}}
-\newlabel{fig:coffee}{{2}{5}{Free Adversarial training using ResNet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 90)\relax }{figure.caption.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Fast is better than free}{5}{section.5}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces FGSM adversarial training for T epochs\relax }}{5}{algorithm.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experiments results}{5}{subsection.5.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces FGSM Adversarial training using Resnet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 45)\relax }}{6}{figure.caption.6}}
-\newlabel{fig:coffee}{{3}{6}{FGSM Adversarial training using Resnet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 45)\relax }{figure.caption.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces FGSM Adversarial training using Resnet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 90)\relax }}{6}{figure.caption.8}}
-\newlabel{fig:coffee}{{4}{6}{FGSM Adversarial training using Resnet50 (epsilon = 8/255, m = 8, batch size = 128, epochs = 90)\relax }{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Final Experiments}{7}{section.6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Free vs Fast using PreActResnet18}{7}{subsection.6.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Comparing results for Adversarial training using PreActResNet18 in Free vs Fast.\relax }}{7}{figure.caption.10}}
-=======
 \citation{ShafahiEtAl2019b}
 \citation{WongEtAl2020}
 \citation{TramerEtAl2017}
@@ -86,7 +61,6 @@
 \@writefile{toc}{\contentsline {section}{\numberline {6}Final Experiments}{7}{section.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Free vs Fast using PreActResnet18}{7}{subsection.6.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Comparing results for Adversarial training using PreActResNet18 in Free vs Fast.\relax }}{7}{figure.caption.10}\protected@file@percent }
->>>>>>> Stashed changes
 \newlabel{fig:coffee}{{5}{7}{Comparing results for Adversarial training using PreActResNet18 in Free vs Fast.\relax }{figure.caption.10}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Free vs Fast using ResNet50}{7}{subsection.6.2}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Comparing results for Adversarial training using Resnet50 in Free vs Fast.\relax }}{8}{figure.caption.12}\protected@file@percent }
@@ -95,8 +69,6 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Free Adversarial training (epsilon = 8/255, m = 8, batch size = 128, epochs = 90)\relax }}{8}{figure.caption.13}\protected@file@percent }
 \newlabel{fig:coffee}{{7}{8}{Free Adversarial training (epsilon = 8/255, m = 8, batch size = 128, epochs = 90)\relax }{figure.caption.13}{}}
 <<<<<<< Updated upstream
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Fast Adversarial training (epsilon = 8/255, $\alpha $ = 10/255, batch size = 128, epochs = 90)\relax }}{8}{figure.caption.14}}
-\newlabel{fig:coffee}{{8}{8}{Fast Adversarial training (epsilon = 8/255, $\alpha $ = 10/255, batch size = 128, epochs = 90)\relax }{figure.caption.14}{}}
 \citation{WongEtAl2020}
 =======
 >>>>>>> Stashed changes
