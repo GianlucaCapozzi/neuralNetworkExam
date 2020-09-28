@@ -21,6 +21,24 @@
 \usepackage{fixmath}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{listings}
+\usepackage{lineno}
+\lstloadlanguages{Python}
+\lstset{%
+	basicstyle=\ttfamily\color{black},
+	commentstyle = \ttfamily\color{red},
+	keywordstyle=\ttfamily\color{blue},
+	stringstyle=\color{orange},
+	tabsize=2,
+	numbers=left,
+	numberstyle=\tiny,
+	firstnumber = 1,
+	numberfirstline=false,
+	frame=single,
+	showstringspaces=false,
+	inputencoding=utf8
+}
 
 
 \DeclareMathOperator{\EX}{\mathbb{E}}% expected value
@@ -41,8 +59,8 @@
 
 \begin{abstract}
 In this work we propose a comparison between two methods for adversarial
-training: Free and Fast. We started from [Shafahi et al.] \cite{ShafahiEtAl2019b} trying to reach their conclusions, in particular the choice of \textit{m} as a crucial parameter in its algorithm. Then we did the same 
-for [Wong et al.] \cite{WongEtAl2020}, with regard to the crucial parameter $\alpha$.
+training: Free and Fast. We started from [Shafahi et al.] \cite{ShafahiEtAl2019b} paper, trying to reach their conclusions, in particular the choice of \textit{m} as a crucial parameter in its algorithm. Then we did the same 
+for [Wong et al.] \cite{WongEtAl2020} paper, with regard to the crucial parameter $\alpha$.
 We then chose from our experiments  the best among these two parameters to enforce a comparison between the two methods presented in the above cited papers, comparing validation and robustness accuracies along with required train times. Finally we analyzed and compared Resnet50 and PreActResNet18 results both in Free and Fast adversarial training.\\
  The code is available at
 \url{https://github.com/not-a-genius/neuralNetworkExam}.
@@ -67,12 +85,12 @@ robustness and generalization \cite{TsiprasEtAl, ZhangEtAl2019a,
 ShafahiEtAl2019a}.
 
 \subsection{Related Works}
-Our work is based on “Adversarial training for free!” paper
+Our work is based on “Adversarial training for free!” paper by [Shafahi et al.]
 \cite{ShafahiEtAl2019b}, that presented an algorithm able to eliminate the
 overhead cost of generating adversarial examples by recycling the gradient
 information computed when updating the model parameters. While researching
 related work in the field we discovered a more recent paper, called "Fast is
-better than free: Revisiting adversarial training" \cite{WongEtAl2020}
+better than free: Revisiting adversarial training" by [Wong et al.] \cite{WongEtAl2020}
 presenting an improvement of an already known method called FGSM, previously
 considered ineffective due to what the paper calls “catastrophic overfitting”.
 This failure condition is preventable with the use of random initialization
@@ -85,7 +103,7 @@ them with our implementation, in order to confirm or deny these thesis.
 \subsection{Dataset and architecture}
 
 We decided to choose CIFAR-10 as the dataset on which our experiments have been
-conducted. All of them are run on a single NVIDIA RTX 2070-Super GPU.\\
+conducted. All of them are run on a single NVIDIA GeForce RTX 2070-Super GPU.\\
 The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with
 6000 images per class. There are 50000 training images and 10000 test images.
 The dataset is divided into five training batches and one test batch, each with
@@ -113,7 +131,7 @@ which models were hardened by producing adversarial examples and injecting them
 into training data \cite{ShafahiEtAl2019b}.\\
 This technique can be summarized as follows: given a network $f_{\theta}$
 parametrized by $\theta$, a dataset ($x_i$, $y_i$), a loss function $l$ and a
-threat model $\Delta$, the learning problem consists in the following
+threat model $\Delta$ (where $\delta \in \Delta$ is the single perturbation), the learning problem consists in the following
 optimization problem:
 \begin{center}
 	$min_{\theta}{\sum_{i}l(f_{\theta}(x_i + \delta), y_i)}$
@@ -126,11 +144,11 @@ The PGD attack is a white-box attack, which means that the attacker has access
 to the model's weights, giving to the attacker much more power than a black-box
 attack (in which the model's weights are not known), as he can specifically
 craft the attack to fool the chosen model without having to rely on transfer
-attacks, which often result in human-visible perturbations. The key for
+attacks, which often results in human-visible perturbations. The key for
 understanding the PGD attack is to frame the research of an adversarial example as a
 constrained optimization problem. PGD attempts to find the perturbation that
 maximizes the loss of a model on a particular input while keeping the size of
-the perturbation smaller than a specified amount referred to as epsilon. This
+the perturbation smaller than a specified amount referred to as $\epsilon$. This
 constraint is usually expressed as the $l_2$ or $l_{\infty}$ norm of the
 perturbation and it is added so that the content of the adversarial example is as similar as possible to the unperturbed sample. The PGD algorithm can be summarised with the 4
 steps below (although the attacker is free to apply any optimisation
@@ -142,12 +160,12 @@ improvements such as momentum, Adam, multiple restarts, etc...):
 	\item Repeat steps 2-3 until convergence.
 \end{enumerate}
 In our case, adversarial training consists simply of putting the PGD attack
-inside the training loop, applying a kind of "data augmentation"; in this case,
+inside the training loop and applying a kind of "data augmentation"; in this case,
 instead of performing random transformations as a preprocessing step, we create
 specific perturbations that best fool the model and indeed adversarially trained
 models do exhibit less overfitting when trained on small datasets.\\
 The PGD attack is based on the simplest version of what is called Fast Gradient
-Sign Method, used to approximate the inner maximization of Delta. This could be
+Sign Method, used to approximate the inner maximization over $\Delta$. This could be
 seen as a relatively inaccurate approximation of the inner maximization for
 $l_{\infty}$ perturbations, and has the following closed form (as shown in
 \cite{GoodfellowEtAl2014}):
@@ -181,6 +199,7 @@ The execution of K-PGD in \cite{MadryEtAl2017} took four days on a Titan X (with
 model WideResNet and dataset CIFAR-10). This led us to consider the reported
 results \cite{ShafahiEtAl2019b},\cite{WongEtAl2020}, obtained using K-PGD
 adversarial training, without running them directly.
+
 \section{DAWNBench improvements}
 The top submissions to the DAWNBench competition have shown that CIFAR10 (and
 also ImageNet) classifiers can be trained spending significantly less
@@ -188,22 +207,23 @@ computational time and at much lower cost than traditional learning methods.
 There are two general approaches that have an effective impact on the
 convergence rate and computational speed of standard training. They are:
 \begin{itemize}
-
-\item \textbf{Cyclic Learning Rate}: used for improving convergence and reducing
-the amount of tuning required when training networks. When a cyclic schedule is
-used, the number of epochs required for training deep networks is drastically
-reduced in particular, in the case of a CIFAR10 classifier, then convergence is
-achieved in tens of epochs instead of hundreds.
-\item \textbf{Mixed-precision arithmetic}: this improvement can be used only
-with newer GPU architectures (which come with tensor cores specifically built
-for rapid half-precision calculations). The key idea is that using
-mixed-precision arithmetic when training deep networks can also provide
-significant speedups for standard training. Moreover, this drastically reduces
-memory utilization. Both these techniques are adopted for use in our
+	\item \textbf{Cyclic Learning Rate}: used for improving convergence and reducing
+	the amount of tuning required when training networks. When a cyclic schedule is
+	used, the number of epochs required for training deep networks is drastically
+	reduced, in particular in the case of a CIFAR10 classifier the convergence is
+	achieved in tens of epochs instead of hundreds.
+	\item \textbf{Mixed-precision arithmetic}: this improvement can be used only
+	with newer GPU architectures (which come with tensor cores specifically built
+	for rapid half-precision calculations). The key idea is that using
+	mixed-precision arithmetic when training deep networks can also provide
+	significant speedups for standard training. Moreover, this drastically reduces
+	memory utilization.
+\end{itemize}
+Both these techniques are adopted for use in our
 experiments, allowing us to drastically reduce the number of training epochs as
 well as the runtime on GPU  infrastructure with tensor cores, while using modest
 amounts of computational resources. 
-\end{itemize}
+
 \section{Free Adversarial training for free!}
 
 Free adversarial training \cite{ShafahiEtAl2019b} claims to reduce the overhead
@@ -212,13 +232,13 @@ computation of ascent step by reusing the backward pass needed for the descent
 step. So the gradient with respect to the network parameters is computed on the
 backward pass and later on this same backward pass the gradient of the loss with
 respect to the input image is also computed.\\
-In order to allow multiple adversarial updates on the same image the training is
+In order to allow multiple adversarial updates on the same image, the training is
 made on the same minibatch \textit{m} times in a row. Every minibatch is
-repeated m times before switching to the next minibatch (“minibatch replays”),
+repeated \textit{m} times before switching to the next minibatch (“minibatch replays”),
 so the number of epochs can be considered as the number of epochs divided by \textit{m},
 such that the overall number of training iterations remains constant. Note that
-perturbations are not reset between mini-batches. The value of this parameter is
-shown to be crucial, since increasing m comes with the risk of increasing
+perturbations are not reset between minibatches. The value of this parameter is
+shown to be crucial, since increasing \textit{m} comes with the risk of increasing
 generalization error revealing  the presence of a trade-off: robustness is
 increased at the cost of validation accuracy on natural images.\\
 The pseudocode of Free is shown in Algorithm 2.
@@ -238,11 +258,11 @@ The pseudocode of Free is shown in Algorithm 2.
 		\epsilon)$ \EndFor \EndFor \EndFor
 	\end{algorithmic}
 \end{algorithm}
-In the choice of m one problem may arise: it's possible that catastrophic
+In the choice of \textit{m} one problem may arise: it's possible that catastrophic
 forgetting happens, e.g. when all the “informative” images of one class are in
-the first few mini-batches. In this extreme case, we do not see useful examples
-for most of the epoch, and forgetting may occur. How much does mini-batch replay
-hurt generalization? To answer the question we followed \cite{ShafahiEtAl2019b}
+the first few minibatches. In this extreme case, we do not see useful examples
+for most of the epoch, and forgetting may occur.\\
+How much does minibatch replay hurt generalization? To answer the question we followed \cite{ShafahiEtAl2019b}
 approach trying different values of \textit{m}, reaching the same results: dropoff in
 accuracy for small \textit{m}, while we see an inversion in PGD and test
 accuracy for high values of it. On CIFAR-10 effective robustness can be reached
@@ -374,7 +394,7 @@ ResNet50}}                               & \multicolumn{3}{l|}{\textbf{}}
 
 [Wong et al.] in \cite{WongEtAl2020} consider it possible to have shorter
 adversarial training times than the Free method proposed by [Shafahi et al.] in
-\cite{ShafahiEtAl2019b} using a modified version of the simple FGSM method,
+\cite{ShafahiEtAl2019b}, using a modified version of the simple FGSM method,
 called Fast; if we compare the data from the two original papers [Shafahi et
 al.] in \cite{ShafahiEtAl2019b} and [Wong et al.] in \cite{WongEtAl2020}, we can see
 that the Free method requires 785 minutes for achieving a good robustness on
@@ -389,7 +409,7 @@ So, “Fast” adversarial training is just standard FGSM with random non-zero
 initialization for the perturbation and this is claimed to be as effective as
 PGD adversarial training. This idea of non-zero random initial perturbation was
 already introduced by [Tramèr et al.] in \cite{TramerEtAl2017} but, the key
-difference between this implementation and Fast is that, the first one uses a
+difference between this implementation and Fast is that the first one uses a
 more restricted random initialization and step size, which doesn't give a robust
 model against PGD attack.  So, for this adversarial training, one crucial
 parameter is the step size $\alpha$ that shows results on par with “Free” ones
@@ -404,9 +424,9 @@ overfitted, restricted to specific threats (“catastrophic overfitting”).
 
 A good compromise for these parameters is shown to be: $\alpha$ = 1.25,
 $\epsilon$ = 10/255.\\
-Another key difference is that FGSM does not need to repeat mini-batches, but
+Another key difference is that FGSM does not need to repeat minibatches, but
 needs two backward passes to compute gradients separately from the perturbation
-and the model weights. From a computational complexity point of view this means
+and the model weights. From a computational complexity point of view, this means
 that an epoch of FGSM is equivalent to two epochs of standard training.
 
 \begin{algorithm}[H]
@@ -425,8 +445,8 @@ that an epoch of FGSM is equivalent to two epochs of standard training.
 \subsection{Experiments results}
 
 All experiments using FGSM adversarial training in this section are carried out
-with the same number of epochs, epsilon value $\epsilon = 8/255$. We ran PGD using three different values for the number \textit{K} of iterations,
-which are \{10, 20, 50\}. The number of random restarts used for PGD is 1
+with the same number of epochs and epsilon value $\epsilon = 8/255$. We ran PGD using three different values for the number \textit{K} of iterations,
+which are \{10, 20, 50\}. The number of random restarts used for PGD is one
 while the remaining hyperparameters are those used by [Wong et al.]
 in \cite{WongEtAl2020}. Speedup is determined also by the optimization of cyclic learning rate and
 mixed-precision.\\
@@ -520,19 +540,57 @@ $\alpha$ = 10/255 & \multicolumn{1}{l|}{0.766} & { 0.391}         & { 90}
   \caption{FGSM Adversarial training using Resnet50 (epsilon = 8/255, \textit{m} = 8, batch size = 128, epochs = 90)}
   \label{fig:coffee}
 \end{figure}
-\newpage
 
 
 \section{Final Experiments}
-In order to ease the training and the experiments using different parameters we also developed a single python script that load user preferences (hyperparameters and general parameters) from an editable config file. In "configs.ini" file the user can choose among three different modalities (sequential running of free adv. training and then fgsm, only free adv. training or only fast) and change hyperparameters  (batch size, epsilon, etc...) along with common parameters (name of the model, output filename, etc...).
+In order to ease the training and the experiments using different parameters we also developed a single python script that load user preferences (hyperparameters and general parameters) from an editable config file. In "configs.ini" file the user can choose among three different modalities (sequential running of Free adv. training and then fgsm, only Free adv. training or only fast) and change hyperparameters  (batch size, epsilon, etc...) along with common parameters (name of the model, output filename, etc...).\\
+Here there is an extract from the script:
+
+\begin{lstlisting}[language=Python, captionpos={b}, caption={main\_script.py}]
+def main():
+	
+	print("Starting experiments")
+	config = parse_config()
+	
+	os.chdir('CIFAR10')
+	
+	mode = int(config["SCRIPT"]["mode"])
+	keysFree= [c for c in config["FREE"] ]
+	keysFast= [c for c in config["FAST"] ]
+	
+	freeCommand = ["python3 free.py"] + 
+		["--"+k+" "+config["FREE"][k] for k in keysFree]
+	freeCommand = " ".join(freeCommand)
+	
+	fastCommand = ["python3 fast.py"] + 
+		["--"+k+" "+config["FAST"][k] for k in keysFast]
+	fastCommand = " ".join(fastCommand)
+	
+	if(mode==0): # BOTH FREE AND FAST
+		print("-"*40,"FREE","-"*40)
+		print("Launching",freeCommand)
+		subprocess.call(freeCommand, shell=True)
+	
+		print("-"*40,"FAST","-"*40)
+		print("Launching",fastCommand)
+		subprocess.call(fastCommand, shell=True)
+		
+	elif(mode==1): # ONLY FREE
+		print("-"*40,"FREE","-"*40)
+		print("Launching",freeCommand)
+		subprocess.call(freeCommand, shell=True)
+	
+	elif(mode==2): # ONLY FAST
+		print("-"*40,"FAST","-"*40)
+		print("Launching",fastCommand)
+		subprocess.call(fastCommand, shell=True)	
+\end{lstlisting}
 
 \subsection{Free vs Fast using PreActResnet18}
-In this section we compare the best results we obtained from the precedent
-experiments, then showing the evolution of validation accuracy in these two
-methods using Resnet50 as model. \\
-The following table contains the best \textit{m} and batch size values for free method,
-obtained from the different free experiments compared with the best step size
-and batch size for FGSM. 
+In this section we compare the best results we obtained from the precedent experiments, then showing the evolution of validation accuracy in these two methods using PreactResnet18 as model. \\
+The following table contains the best \textit{m} and batch size values for Free method, obtained from the different Free experiments compared with the best step size and batch size for FGSM.
+
+
 \begin{table}[hbt!]
 \begin{tabular}{|l|p{2.1cm}|c|l|l|l|l|l|}
 \hline
@@ -549,11 +607,12 @@ and batch size for FGSM.
 & { 176}                     & { 117}                         & { 128}
 \\ \hline
 \textbf{FAST} & $\alpha = 10/255$       & \multicolumn{1}{l|}{0.836} & { 0.434}
-& { 90}           & { 43}                     & { 28}                         &
+& { 84}           & { 43}                     & { 28}                         &
 { 128}               \\ \hline
 \end{tabular}
 \end{table}
 
+\newpage
 \begin{figure}[hbt!]
   \centering
   \begin{subfigure}[b]{0.4\linewidth}
@@ -568,12 +627,14 @@ and batch size for FGSM.
   \label{fig:coffee}
 \end{figure}
 
+As we can see from the previous data, Free can be considered the best solution since, even if there is a substantial difference between the training times associated to the two methods, the great difference between the two values associated to the accuracy against PGD-50 suggests to choose Free as algorithm for adversarial training.
+
 \subsection{Free vs Fast using ResNet50}
 In this section we compare the best results we obtained from the precedent
 experiments, then showing the evolution of validation accuracy in these two
 methods when using Resnet50 as model. \\
-The following table contains the best \textit{m} and batch size values for free method,
-obtained from the different free experiments compared with the best step size
+The following table contains the best \textit{m} and batch size values for Free method,
+obtained from the different Free experiments compared with the best step size
 and batch size for FGSM. 
 
 \begin{table}[hbt!]
@@ -597,8 +658,6 @@ and batch size for FGSM.
 \end{tabular}
 \end{table}
 
-\newpage
-
 
 \begin{figure}[hbt!]
   \centering
@@ -613,6 +672,8 @@ and batch size for FGSM.
   \caption{Comparing results for Adversarial training using Resnet50 in Free vs Fast.}
   \label{fig:coffee}
 \end{figure}
+
+The results of both Free and Fast using ResNet50 are not on par with the ones using PreActResnet18 (both for natural images and PGD-50) but, in this particular study case, Fast outperforms Free for what concerns the training time; on the other side, the difference between Free and Fast about the accuracies is not so relevant, so we can choose Fast as best method when using ResNet50 as training model.
 
 \subsection{PreAct18 vs ResNet50}
 In the following two charts we compare the evolution of Free adv. learning using
@@ -649,21 +710,20 @@ the two different models ResNet50 and PreActResnet18.
   \label{fig:coffee}
 \end{figure}
 
-
+As we can see from the previous charts, for each of the study cases, PreActResnet18 seems to be the best model to use according to the results both on test validation accuracy and PGD validation accuracy. Even if the time required to train the model based on ResNet50 is less than the one required to train the model based on PreActResnet18 (indeed this difference is evident from the two tables shown before), we decided to focus mainly on the latter, since this difference in time is not so high while, on the other side, there is a significant difference between the two models in terms of accuracies (both on natural images and perturbed ones). Obviously, these results are based on the usage of CIFAR-10 as dataset for the experiments but, as we can see from the original papers, the previous claim could not be valid when the used dataset is bigger than the one considered in this case (for example when using ImageNet).
 
 \newpage
 \section{Conclusions}
-Our experiments confirm minibatch-replays (\textit{m}) as a crucial parameter regarding free method, that needs to be tuned trying to reach a trade-off between test and robustness accuracies.\\
-In Fast instead step size ($\alpha$) value is a crucial parameter, highly impactful on robust accuracy. We reached a “catastrophic overfitting” obtaining a null PGD accuracy value passing from a step size of value 10/255 to a step size of value 16/255. 
+Our experiments confirm minibatch-replays (\textit{m}) as a crucial parameter regarding Free method, that needs to be tuned trying to reach a trade-off between test and robustness accuracies. Instead in Fast, step size ($\alpha$) value is a crucial parameter, highly impactful on robust accuracy. We reached a “catastrophic overfitting” obtaining a null PGD accuracy value passing from a step size of value 10/255 to a step size of value 16/255. 
 [Wong et al.]'s paper \cite{WongEtAl2020} was useful to reconsider FGSM as a
 feasible method for adversarial training once step size parameter is tuned
 correctly, and how simple optimization operations on learning rate adaptation
 (Cyclic Learning Rate) or based on hardware compatibility with mixed precision
 computation (Mixed-precision arithmetic) can decrease computation time, with
-small efforts. FGSM shows results similar to the ones obtained from the "Free"
+small efforts. FGSM shows results similar to the ones obtained from the Free
 method, considering the same number of epochs, but the total training time
 suggests FGSM as a faster and better method to speed up adversarial training
-compared to free, moreover PreActResnet18 showed better results than Resnet50 for all the considered epochs, based on our experiments on CIFAR-10.   
+compared to Free, moreover PreActResnet18 showed better results than Resnet50 for all the considered epochs, based on our experiments on CIFAR-10.   
 
 
 

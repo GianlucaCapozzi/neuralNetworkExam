@@ -10,6 +10,7 @@ def parse_config():
     config = configparser.ConfigParser()
     config.read('configs.ini')
     return config
+    
 def main():
 
     print("Starting experiments")
