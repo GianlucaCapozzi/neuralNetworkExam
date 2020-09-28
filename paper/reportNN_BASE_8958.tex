@@ -106,8 +106,8 @@ The execution of K-PGD in \cite{MadryEtAl2017} took four days on a Titan X (with
 
 \section{Free Adversarial training for free!}
 
-Free adversarial training \cite{ShafahiEtAl2019b} claims to reduce the overhead compared to natural training through the computation of ascent step, by reusing the backward pass needed for the descent step. So, the gradient with respect to the network parameters is computed on the backward pass and later, on this same backward pass, the gradient of the loss with respect to the input image is also computed.\\
-In order to allow multiple adversarial updates on the same image, the training is made on the same minibatch \textit{m} times in a row. Every minibatch is repeated m times before switching to the next minibatch (“minibatch replays”), so the number of epochs can be considered the number of epochs divided by \textit{m}, such that the overall number of training iterations remains constant. Note that the perturbations are not reset between mini-batches. The value of this parameter is shown to be crucial, since increasing \textit{m} comes with the risk of increasing generalization error so, robustness is increased at the cost of validation accuracy on natural images.\\
+Free adversarial training \cite{ShafahiEtAl2019b} claims to reduce the overhead compared to natural training through the computation of ascent step by reusing the backward pass needed for the descent step. So, the gradient with respect to the network parameters is computed on the backward pass and later on this same backward pass the gradient of the loss with respect to the input image is also computed.\\
+In order to allow multiple adversarial updates on the same image the training is made on the same minibatch \textit{m} times in a row. Every minibatch is repeated m times before switching to the next minibatch (“minibatch replays”), so the number of epochs can be considered the number of epochs divided by m, such that the overall number of training iterations remains constant. Note that perturbations are not reset between mini-batches. The value of this parameter is shown to be crucial, since increasing m comes with the risk of increasing generalization error so robustness is increased at the cost of validation accuracy on natural images.\\
 The pseudocode of Free is shown in Algorithm 2.
 
 \begin{algorithm}[H]
@@ -134,21 +134,20 @@ The pseudocode of Free is shown in Algorithm 2.
 
 It may be possible that catastrophic forgetting happens, e.g. when all the “informative” images of one class are in the first few mini-batches. In this extreme case, we do not see useful examples for most of the epoch, and forgetting may occur.
 How much does mini-batch replay hurt generalization?
-To answer the question we followed \cite{ShafahiEtAl2019b} approach trying different values of \textit{m}, reaching the same results: dropoff in accuracy for small \textit{m}, while we see an inversion in PGD and test accuracy for high values of it. On CIFAR-10, robustness can be reached with values of $m \leq 10$; our best results have been obtained with $m = 8$.\\
-It is known that adversarially trained classifiers, e.g. classifiers trained against PGD,  have generative behaviours. When an image is perturbed from one class to another, it adopts features that make it “look” like its adopted class, to a human eye.
+To answer the question we followed \cite{ShafahiEtAl2019b} approach trying different values of m, reaching the same results: dropoff in accuracy for small \textit{m}, while we see an inversion in PGD and test accuracy for high values of it. On CIFAR10 robustness can be reached with values of $m \leq 10$, our best results have been obtained with $m = 8$.\\
+It is known that adversarially trained classifiers, e.g. PGD,  have generative behaviours. When an image is perturbed from one class to another, it adopts features that make it “look” like its adopted class, to a human eye.
 Free trained models exhibit this benefit and also smooth and flattened loss surface.
 Indeed, standard adversarially trainined classifiers show the property to have a flatten and smooth loss landscape while some defenses work by “masking” the gradients. This techniques makes it difficult to identify
 adversarial examples using gradient methods, even though adversarial examples remain present.
 Reference \cite{EngstromEtAl2018} argues that gradient masking adds little security, free training does not operate by masking gradients and uses a rough loss surface.
-<<<<<<< Updated upstream
-=======
-In the following table we present the results of our experiments conducted using Free method and varying the number of minibatch replays. We can notice that the train time increase as m increases as expected but in the case of $m=10$ we see a small inversion in the value of both natural image accuracy and robustness.\\
->>>>>>> Stashed changes
+In the following table we present the results of our experiments conducted using Free method and varying the number of minibatch replays. We can notice that the train time increase as m increases as expected but in the case of $m=10$ we got values of accuracies lower than $m=8$.\\
+The following table shows the results of our experiments:
 
 \subsection{Experiments results}
-In this section, we present the results of our experiments conducted using Free method and varying the number of minibatch replays. We can notice that the train time increase as \textit{m} increases as expected but in the case of $m=10$ we got values of accuracies lower than $m=8$.\\
-All experiments using Free adversarial training in this section are carried out with the same number of epochs and epsilon value $\epsilon = 8/255$. We are interested evaluating the accuracy of the model against the natural images and the accuracy against images perturbed using the PGD attack. In particular, we run PGD using three different values for the number \textit{K} of iterations, which are {10, 20, 50}. The number of random restarts used for PGD is 1; all the other hyper-parameters are the same used by [Shafahi et al.] in \cite{ShafahiEtAl2019b}. The implementation of Free provided by [Wong et al.] in \cite{WongEtAl2020} includes also the optimization of cyclic learning rate and mixed-precision.\\
-The following table shows the results when the used model is PreactResNet18:
+All experiments using Free adversarial training in this section are carried out with the same number of epochs, epsilon value $\epsilon = 8/255$. All PGD adversaries used at
+evaluation are run with 1 random restarts for 10,20,50 iterations (with the same hyperparameters as those
+used by Shafahi et al. (2019) but further strengthened with random restarts). Speedup with mixed-
+precision was incorporated with the Apex amp package at the O2 without loss scaling.
 \begin{table}[hbt!]
 \begin{tabular}{|c|l|l|l|l|l|l|p{2cm}|}
 \hline
@@ -211,18 +210,18 @@ m = 8       & \multicolumn{1}{l|}{0.735} & { 0.404}         & { 90}           & 
 
 \section{Fast is better than free}
 
-[Wong et al.] in \cite{WongEtAl2020} consider it possible to have shorter adversarial training times than the Free method proposed by [Shafai et al.] in \cite{ShafahiEtAl2019b} using a modified version of the simple FGSM method, called Fast; if we compare the data from the two original papers [Shafahi et al.] \cite{ShafahiEtAl2019b} and [Wong et al.] \cite{WongEtAl2020}, we can see that the Free method requires 785 minutes for achieving a good robustness on CIFAR-10 against PGD while the Fast method, in order to achieve the same robustness, requires 12.17 minutes. Similar results about the speed-up in adversarial training time can been observed if the chosen dataset is Imagenet.\\
-A key difference between Fast/FGSM and Free adversarial training, is that in the latter the perturbation from the previous minibatch is a reasonable starting point for the next minibatch, while FGSM can be used as it is, just starting from a non-zero initial perturbation.\\
-So, “Fast” adversarial training is just standard FGSM with random non-zero initialization for the perturbation and this is claimed to be as effective as PGD adversarial training. This idea of non-zero random initial perturbation was already introduced by [Tramèr et al.] in \cite{TramerEtAl2017} but, the key difference between this implementation and Fast is that, the first one uses a more restricted random initialization and step size, which doesn't give a robust model against PGD attack.  So, for this adversarial training, one crucial parameter is the step size $\alpha$ that shows results on par with “Free” ones only choosing values in a particular interval. Indeed, two failure modes arise:
-
+Wong et al. (2019) consider it possible to have shorter times than Shafai et al. (2019) “free” method using FGSM,  when Shafai et al. claim to spend 10 hours (200 epochs) to learn a robust CIFAR10 [??? non dal paper di free] , while standard training requires minutes. Similarly for Imagenet.  
+A key difference between FGSM and free adversarial training is that in the latter the perturbation from the previous minibatch is a reasonable starting point for the next minibatch, while FGSM can be used as it is just starting from a non-zero initial perturbation.
+So “Fast” adversarial training is just standard FGSM with random initialization for the perturbation and this is claimed to be as effective as PGD adversarial training.
+For this adversarial training one crucial parameter is the step size $\alpha$ that shows results on par with “Free” ones only choosing values in a particular interval. Indeed, two failure modes arise: 
 \begin{itemize}
 
 \item a step size too small ($\alpha$ =$\epsilon$) would mean a zero-initialized perturbation and lead to a too weak defense
 \item a step size too large ($\alpha$ = $2\epsilon$) will lead to a model overfitted, restricted to specific threats (“catastrophic overfitting”).
 \end{itemize}
 
-A good compromise for these parameters is shown to be: $\alpha$ = 1.25, $\epsilon$ = 10/255.\\
-Another key difference is that FGSM does not need to repeat mini-batches, but needs two backward passes to compute gradients separately from the perturbation and the model weights. From a computational complexity point of view this means that an epoch of FGSM is equivalent to two epochs of standard training.
+A good compromise is shown to be: $\alpha$ = 1.25, $\epsilon$ = 10/255.
+Another key difference is that FGSM does not need to repeat mini-batches but needs two backward passes to compute gradients separately from the perturbation and the model weights. From a computational complexity point of view this means that an epoch of FGSM is equivalent to two epochs of standard training.
 
 \begin{algorithm}[H]
 	\caption{FGSM adversarial training for T epochs}
@@ -402,8 +401,8 @@ In the following two charts we compare the evolution of Free adv.learning using 
 
 \newpage
 \section{Conclusions}
-Wong et al.'s paper \cite{WongEtAl2020} was useful to reconsider FGSM as a feasible method for adversarial training once step size parameter is tuned correctly, and how simple optimization operations on learning rate adaptation (Cyclic Learning Rate) or based on hardware compatibility with mixed precision computation (Mixed-precision arithmetic) can decrease computation time, with small effort.
-FGSM shows results similar to the ones obtained from the "Free" method, considering the same number of epochs, but the total training time suggests FGSM as a faster and better method to speed up adversarial training compared to free, based on our experiments on CIFAR-10.   
+Wong et al.'s paper about was useful to reconsider FGSM as a feasible method for adversarial training once step size parameter is tuned correctly, and how simple optimization operations on learning rate adaptation (Cyclic Learning Rate) or based on hardware compatibility with mixed precision computation (Mixed-precision arithmetic) can decrease computation time, with small effort.
+FGSM shows results similar to the ones obtained from the "Free" method, considering the same number of epochs, but the total training time suggests FGSM as a faster and better method to speed up adversarial training compared to free, based on our experiments on CIFAR10.   
 
 
 
@@ -427,10 +426,6 @@ FGSM shows results similar to the ones obtained from the "Free" method, consider
 	\bibitem{MadryEtAl2017} {Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipras, and Adrian Vladu. Towards deep learning models resistant to adversarial attacks. ICLR, 2017.}
 	
 	\bibitem{EngstromEtAl2018} {Logan Engstrom, Andrew Ilyas, and Anish Athalye. Evaluating and understanding the robustness of adversarial logit pairing. arXiv preprint arXiv:1807.10272, 2018.}
-	
-	\bibitem{TramerEtAl2017} {Florian Tramèr, Alexey Kurakin, Nicolas Papernot, Ian Goodfellow, Dan Boneh, and Patrick Mc-
-		Daniel. Ensemble adversarial training: Attacks and defenses. arXiv preprint arXiv:1705.07204,
-		2017.}
 	
 \end{thebibliography}
 	

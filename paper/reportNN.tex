@@ -57,13 +57,13 @@ This caught our interest and we decided to try to replicate the reported results
 
 \subsection{Dataset and architecture}
 
-We decided to choose CIFAR-10 as the dataset on which our experiments have been conducted to adapt to the available hardware (our GPU is an Nvidia RTX 2070 super). The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class.\\
+We decided to choose CIFAR-10 as the dataset on which our experiments would have been conducted to adapt to the available hardware (our GPU is an Nvidia RTX 2070 super). The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class.\\
 We conducted adversarial training examples using as models ResNet50 and PreActResNet18. 
 Both ResNet50 and PreActResnet18 results have been reported and compared between them, under the same conditions. 
 
 
 \section{Adversarial Machine Learning}
-Adversarial machine learning is a machine learning technique that attempts to fool models by supplying deceptive input (called also adversarial example). Adversarial examples exploit the way artificial intelligence algorithms work to disrupt the behavior of artificial intelligence algorithms. In the past few years, adversarial machine learning has become an active area of research as the role of AI continues to grow in many of the applications we use. There’s growing concern that vulnerabilities in machine learning systems can be exploited for malicious purposes. The main idea to dealt with adversarial examples is represented by adversarial training; it can be traced back to \cite{GoodfellowEtAl2015}, in which models were hardened by producing adversarial examples and injecting them into training data \cite{ShafahiEtAl2019b}.\\
+Adversarial machine learning is a machine learning technique that attempts to fool models by supplying deceptive input (called also adversarial example). Adversarial examples exploit the way artificial intelligence algorithms work to disrupt the behavior of artificial intelligence algorithms. In the past few years, adversarial machine learning has become an active area of research as the role of AI continues to grow in many of the applications we use. There’s growing concern that vulnerabilities in machine learning systems can be exploited for malicious purposes. The main idea to deal with adversarial examples is represented by adversarial training; it can be traced back to \cite{GoodfellowEtAl2015}, in which models were hardened by producing adversarial examples and injecting them into training data \cite{ShafahiEtAl2019b}.\\
 This technique can be summarized as follows: given a network $f_{\theta}$ parametrized by $\theta$, a dataset ($x_i$, $y_i$), a loss function $l$ and a threat model $\Delta$, the learning problem consists in the following optimization problem:
 \begin{center}
 	$min_{\theta}{\sum_{i}l(f_{\theta}(x_i + \delta), y_i)}$
@@ -102,7 +102,7 @@ A better approximation of the inner maximization is to take multiple, smaller FG
 		\EndFor
 	\end{algorithmic}
 \end{algorithm}
-The execution of K-PGD in \cite{MadryEtAl2017} took four days on a Titan X (with model WideResNet and dataset CIFAR-10). This led us to consider the reported results obtained using this adversarial training, without running them directly.
+The execution of K-PGD in \cite{MadryEtAl2017} took four days on a Titan X (with model WideResNet and dataset CIFAR-10). This led us to consider the reported results \cite{ShafahiEtAl2019b},\cite{WongEtAl2020}, obtained using K-PGD adversarial training, without running them directly.
 
 \section{Free Adversarial training for free!}
 
