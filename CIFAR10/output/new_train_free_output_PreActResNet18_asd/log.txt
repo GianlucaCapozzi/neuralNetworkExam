@@ -1,0 +1,13 @@
+***************************** LOGISTICS *****************************
+Experiment Date: 2020-09-28 11:21
+Output Name: new_train_free_output_PreActResNet18_asd
+User: giuppo
+Running on cuda
+Train Epoch: [0][0/391]	Time 1.195 (1.195)	Data 0.000 (0.000)	Loss 2.3108 (2.3108)	Prec@1 10.938 (10.938)	Prec@5 48.438 (48.438)
+Train Epoch: [0][0/391]	Time 0.067 (0.631)	Data 0.000 (0.000)	Loss 2.9532 (2.6320)	Prec@1 0.000 (5.469)	Prec@5 0.000 (24.219)
+Train Epoch: [0][0/391]	Time 0.115 (0.459)	Data 0.000 (0.000)	Loss 3.1222 (2.7954)	Prec@1 0.000 (3.646)	Prec@5 0.000 (16.146)
+Train Epoch: [0][0/391]	Time 0.119 (0.374)	Data 0.000 (0.000)	Loss 3.0943 (2.8701)	Prec@1 0.000 (2.734)	Prec@5 0.000 (12.109)
+Train Epoch: [0][0/391]	Time 0.121 (0.323)	Data 0.000 (0.000)	Loss 3.1651 (2.9291)	Prec@1 0.000 (2.188)	Prec@5 0.000 (9.688)
+Train Epoch: [0][0/391]	Time 0.121 (0.290)	Data 0.000 (0.000)	Loss 3.1585 (2.9673)	Prec@1 0.000 (1.823)	Prec@5 0.000 (8.073)
+Train Epoch: [0][0/391]	Time 0.125 (0.266)	Data 0.000 (0.000)	Loss 3.1862 (2.9986)	Prec@1 0.000 (1.563)	Prec@5 0.000 (6.920)
+Train Epoch: [0][0/391]	Time 0.123 (0.248)	Data 0.000 (0.000)	Loss 3.1806 (3.0214)	Prec@1 0.000 (1.367)	Prec@5 0.000 (6.055)

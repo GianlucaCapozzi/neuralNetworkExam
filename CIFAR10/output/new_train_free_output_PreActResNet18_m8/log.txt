@@ -1,0 +1,13 @@
+***************************** LOGISTICS *****************************
+Experiment Date: 2020-09-25 13:14
+Output Name: new_train_free_output_PreActResNet18_m8
+User: giuppo
+Running on cuda
+Train Epoch: [0][0/391]	Time 1.096 (1.096)	Data 0.000 (0.000)	Loss 2.3108 (2.3108)	Prec@1 10.938 (10.938)	Prec@5 48.438 (48.438)
+Train Epoch: [0][0/391]	Time 0.043 (0.570)	Data 0.000 (0.000)	Loss 2.9535 (2.6321)	Prec@1 0.000 (5.469)	Prec@5 0.000 (24.219)
+Train Epoch: [0][0/391]	Time 0.121 (0.420)	Data 0.000 (0.000)	Loss 3.1247 (2.7963)	Prec@1 0.000 (3.646)	Prec@5 0.000 (16.146)
+Train Epoch: [0][0/391]	Time 0.119 (0.345)	Data 0.000 (0.000)	Loss 3.0933 (2.8705)	Prec@1 0.000 (2.734)	Prec@5 0.000 (12.109)
+Train Epoch: [0][0/391]	Time 0.124 (0.301)	Data 0.000 (0.000)	Loss 3.1696 (2.9304)	Prec@1 0.000 (2.188)	Prec@5 0.000 (9.688)
+Train Epoch: [0][0/391]	Time 0.120 (0.271)	Data 0.000 (0.000)	Loss 3.1538 (2.9676)	Prec@1 0.000 (1.823)	Prec@5 0.000 (8.073)
+Train Epoch: [0][0/391]	Time 0.119 (0.249)	Data 0.000 (0.000)	Loss 3.1885 (2.9992)	Prec@1 0.000 (1.563)	Prec@5 0.000 (6.920)
+Train Epoch: [0][0/391]	Time 0.121 (0.233)	Data 0.000 (0.000)	Loss 3.1876 (3.0227)	Prec@1 0.000 (1.367)	Prec@5 0.000 (6.055)
