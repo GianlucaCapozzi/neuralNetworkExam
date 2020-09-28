@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch-size', default=128, type=int)
-    parser.add_argument('--data-dir', default='../../data', type=str)
+    parser.add_argument('--data-dir', default='data', type=str)
     parser.add_argument('--epochs', default=90, type=int, help='Total number of epochs will be this argument * number of minibatch replays.')
     parser.add_argument('--lr-schedule', default='cyclic', type=str, choices=['cyclic', 'multistep'])
     parser.add_argument('--lr-min', default=0., type=float)
