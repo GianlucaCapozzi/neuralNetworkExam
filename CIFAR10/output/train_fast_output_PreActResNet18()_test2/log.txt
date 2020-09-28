@@ -1,0 +1,5 @@
+***************************** LOGISTICS *****************************
+Experiment Date: 2020-09-28 12:04
+Output Name: train_fast_output_PreActResNet18()_test2
+User: gianluca
+Running on cuda

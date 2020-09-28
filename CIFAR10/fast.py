@@ -48,7 +48,8 @@ def get_args():
     return parser.parse_args()
 
 args = get_args()
-logger = initiate_logger(args.out_dir + "_PreActResNet18_"+args.custom_name)
+
+logger = initiate_logger(args.out_dir + "_" + args.model_name + "_" + args.custom_name)
 print = logger.info
 cudnn.benchmark = True
 
@@ -69,8 +70,10 @@ def main():
     alpha = (args.alpha / 255.) / std
     pgd_alpha = (2 / 255.) / std
 
-    model = args.model().to(device)
-    #model = models.resnet50().cuda()
+    if(args.model_name == "PreActResNet18"):
+        model = PreActResNet18().to(device)
+    else:
+        model = models.resnet50().to(device)
     model.train()
 
     opt = torch.optim.SGD(model.parameters(), lr=args.lr_max, momentum=args.momentum, weight_decay=args.weight_decay)
@@ -112,8 +115,10 @@ def main():
 
         # Evaluation
         best_state_dict = model.state_dict()
-        #model_test = models.resnet50().cuda()
-        model_test = PreActResNet18().to(device)
+        if(args.model_name == "PreActResNet18"):
+            model_test = PreActResNet18().to(device)
+        else:
+            model_test = models.resnet50().to(device)
         model_test.load_state_dict(best_state_dict)
         model_test.float()
         model_test.eval()
