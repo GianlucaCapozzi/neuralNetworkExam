@@ -3,12 +3,13 @@
 \BOOKMARK [2][-]{subsection.1.2}{Dataset and architecture}{section.1}% 3
 \BOOKMARK [1][-]{section.2}{Adversarial Machine Learning}{}% 4
 \BOOKMARK [1][-]{section.3}{PGD attack}{}% 5
-\BOOKMARK [1][-]{section.4}{Free Adversarial training for free!}{}% 6
-\BOOKMARK [2][-]{subsection.4.1}{Experiments results}{section.4}% 7
-\BOOKMARK [1][-]{section.5}{Fast is better than free}{}% 8
-\BOOKMARK [2][-]{subsection.5.1}{Experiments results}{section.5}% 9
-\BOOKMARK [1][-]{section.6}{Final Experiments}{}% 10
-\BOOKMARK [2][-]{subsection.6.1}{Free vs Fast using PreActResnet18}{section.6}% 11
-\BOOKMARK [2][-]{subsection.6.2}{Free vs Fast using ResNet50}{section.6}% 12
-\BOOKMARK [2][-]{subsection.6.3}{PreAct18 vs ResNet50}{section.6}% 13
-\BOOKMARK [1][-]{section.7}{Conclusions}{}% 14
+\BOOKMARK [1][-]{section.4}{DAWNBench improvements}{}% 6
+\BOOKMARK [1][-]{section.5}{Free Adversarial training for free!}{}% 7
+\BOOKMARK [2][-]{subsection.5.1}{Experiments results}{section.5}% 8
+\BOOKMARK [1][-]{section.6}{Fast is better than free}{}% 9
+\BOOKMARK [2][-]{subsection.6.1}{Experiments results}{section.6}% 10
+\BOOKMARK [1][-]{section.7}{Final Experiments}{}% 11
+\BOOKMARK [2][-]{subsection.7.1}{Free vs Fast using PreActResnet18}{section.7}% 12
+\BOOKMARK [2][-]{subsection.7.2}{Free vs Fast using ResNet50}{section.7}% 13
+\BOOKMARK [2][-]{subsection.7.3}{PreAct18 vs ResNet50}{section.7}% 14
+\BOOKMARK [1][-]{section.8}{Conclusions}{}% 15

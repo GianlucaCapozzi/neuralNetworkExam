@@ -2,7 +2,7 @@
 import sys
 import subprocess
 import configparser
-
+import os
 
 
 
@@ -14,6 +14,9 @@ def main():
 
     print("Starting experiments")
     config = parse_config()
+    
+    os.chdir('CIFAR10')
+
     mode = int(config["SCRIPT"]["mode"])
     keysFree= [c for c in config["FREE"] ]
     keysFast= [c for c in config["FAST"] ]
